@@ -3,6 +3,7 @@
 # 1. Animated checkbox
 
 Using layering technique to animate a check box when selected
+
 ![check box](/Resources/screen_recording.gif "Animated Checkbox")
 
 
