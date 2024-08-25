@@ -3,7 +3,7 @@
 # 1. Animated checkbox
 
 Using layering technique to animate a check box when selected
-[image](/Resources/screen_recording.gif)
+![check box](/Resources/screen_recording.gif "Animated Checkbox")
 
 
 ```swift
