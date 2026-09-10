@@ -15,8 +15,32 @@ struct ContentView: View {
 				Row(text: "🏋🏽 Weight training")
 				Row(text: "🛒 Grocery shopping")
 				Row(text: "🙏🏽 Say thanks")
+
+				NavigationLink {
+					StickyHeaderQuestionView()
+				} label: {
+					Row(text: "📝 Quiz Page")
+				}
+
+				NavigationLink {
+					HighlightSampleView()
+				} label: {
+					Row(text: "📝 HTML highlighter")
+				}
+
+				NavigationLink {
+					IntensityPickerDemoView()
+				} label: {
+					Row(text: "🎚️ Intensity picker")
+				}
+
+				NavigationLink {
+					CoverFlowDemoView()
+				} label: {
+					Row(text: "📚 Cover Flow")
+				}
+
 			}
-			.background(.black)
 			.navigationTitle("Daily Rituals")
 			.navigationBarTitleDisplayMode(.large)
 		}
@@ -37,7 +61,7 @@ struct Row: View {
 				.strikethrough(isComplete)
 				.padding(.leading, 8.0)
 		}
-		.listRowBackground(background)
+		.listRowBackground(background.lighten)
 		.listRowSeparatorTint(.gray)
 	}
 }
