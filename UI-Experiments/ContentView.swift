@@ -11,6 +11,22 @@ struct ContentView: View {
 	var body: some View {
 		NavigationStack {
 			List {
+				NavigationLink {
+					UltracodeDemoView()
+				} label: {
+					Label("Ultracode", systemImage: "guitars.fill")
+						.font(.title3)
+				}
+				.accessibilityIdentifier("ultracode-demo")
+
+				NavigationLink {
+					DynamicLayoutDemoView()
+				} label: {
+					Label("Dynamic layout", systemImage: "rectangle.3.group.fill")
+						.font(.title3)
+				}
+				.accessibilityIdentifier("dynamic-layout-demo")
+
 				Row(text: "👨🏽‍💻 Write code everyday")
 				Row(text: "🏋🏽 Weight training")
 				Row(text: "🛒 Grocery shopping")

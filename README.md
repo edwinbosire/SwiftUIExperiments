@@ -1,1 +1,49 @@
 # SwiftUIExperiments
+
+## Ultracode
+
+Open **Ultracode** from the main list. The effort modal opens automatically.
+Its final row fades from white to aubergine, introduces an orange pixel mascot,
+then brings out an electric guitar, floating gold notes, and traveling square-grid
+waves. The row animation runs independently of the selected effort, as in the
+reference video. Tap an effort to select it; the selection survives closing and
+reopening the modal. The replay button restarts the entrance sequence.
+
+The guitarist uses separate pixel layers for its body, double-cutaway guitar,
+fretting hand, and strumming arm, with stepped playing poses and occasional
+blinks. A fixed square lattice lights up in expanding rings from the guitarist;
+the first broad wash gives way to shorter pulses and overlapping echoes.
+
+The animation uses SwiftUI `TimelineView` and `Canvas` with procedural pixel art;
+no video playback, external assets, or dependencies are needed. Reduce Motion
+shows a still composition, and the timeline pauses while the app is inactive.
+The sheet scrolls at larger text sizes and supports the iOS 17.5 deployment target.
+`UltracodeDemoView.swift` also includes a standalone preview.
+
+## Dynamic layout
+
+Open **Dynamic layout** from the app's main list. Touch and hold a colored rectangle,
+drag to rearrange the layout live, and release to place it. Reset restores the sample order.
+VoiceOver users can use the **Move earlier** and **Move later** actions.
+Use the **+** toolbar button to add a rectangle with a random color, size, and
+fixed or flexible width. Tap its **×** button to remove it. Insertions and removals
+animate, and newly added rectangles scroll into view.
+
+- `FlowLayout` measures each child and fills rows in array order. Rows are
+  top-aligned and spaced below the tallest child; gaps below shorter children are
+  intentionally left empty. Children should respect the proposed width.
+- Pass `width: { item in ... }` to `ReorderableFlow` to mix `.fixed(150)` with
+  `.flexible(minimum: 110)`. Rows are formed using minimum widths; flexible items
+  share any remaining width equally on top of their minimums. Explicit minimums
+  are preserved even if the container is narrower. The sample marks flexible
+  items with an arrow badge, and recalculates their widths during reordering.
+- `ReorderableFlow` accepts a binding to an array of identifiable items and a view
+  builder. Replace the sample rectangles with your own components, keeping IDs
+  stable. The array updates during the drag. The placeholder and surrounding components
+  animate into place while the lifted component follows your finger.
+- The sample uses `onDraggingChanged` to pause its surrounding scroll view while
+  a rectangle is lifted. Scroll before dragging to reach additional items; this
+  sample does not automatically scroll at the viewport edges.
+
+The sample supports the project's iOS 17.5 deployment target and includes a
+standalone SwiftUI preview in `DynamicLayoutDemoView.swift`.
