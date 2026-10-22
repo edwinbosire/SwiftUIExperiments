@@ -9,6 +9,55 @@ import XCTest
 
 final class UI_ExperimentsUITests: XCTestCase {
 
+    func testGrokReactionsApplyToAllNineAndReplayWelcome() {
+        let app = XCUIApplication()
+        app.launch()
+        app.buttons["grok-bot-demo"].tap()
+        let showReactions = app.buttons["grok-reactions"]
+        XCTAssertTrue(showReactions.waitForExistence(timeout: 5))
+        showReactions.tap()
+
+        let cloud = app.buttons["grok-card-0"]
+        XCTAssertTrue(cloud.waitForExistence(timeout: 5))
+        XCTAssertEqual(cloud.value as? String, "Auto")
+        cloud.tap()
+        XCTAssertEqual(cloud.value as? String, "Curious")
+
+        // Selecting the already-selected group reaction must clear overrides.
+        app.buttons["grok-reaction-Auto"].tap()
+        XCTAssertEqual(cloud.value as? String, "Auto")
+        app.buttons["grok-reaction-Happy"].tap()
+        for id in 0..<6 {
+            XCTAssertEqual(app.buttons["grok-card-\(id)"].value as? String, "Happy")
+        }
+        app.swipeUp()
+        for id in 6..<9 {
+            let card = app.buttons["grok-card-\(id)"]
+            XCTAssertTrue(card.exists)
+            XCTAssertEqual(card.value as? String, "Happy")
+        }
+        app.buttons["grok-replay-welcome"].tap()
+        XCTAssertTrue(showReactions.waitForExistence(timeout: 5))
+        XCTAssertEqual(app.buttons["grok-bot-0"].value as? String, "Auto")
+        app.buttons["close-grok-demo"].tap()
+        XCTAssertTrue(app.buttons["grok-bot-demo"].waitForExistence(timeout: 5))
+    }
+
+    func testGrokReactionsAtAccessibilityTextSize() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        app.buttons["grok-bot-demo"].tap()
+        app.buttons["grok-reactions"].tap()
+        let cloud = app.buttons["grok-card-0"]
+        XCTAssertTrue(cloud.waitForExistence(timeout: 5))
+        XCTAssertTrue(cloud.isHittable)
+        cloud.tap()
+        XCTAssertEqual(cloud.value as? String, "Curious")
+        app.buttons["Done"].tap()
+        XCTAssertTrue(app.buttons["grok-reactions"].isHittable)
+    }
+
     func testUltracodeSelectionReplayAndReopening() {
         let app = XCUIApplication()
         app.launch()

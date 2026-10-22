@@ -1,5 +1,29 @@
 # SwiftUIExperiments
 
+## Grok Bot mascots
+
+Open **Grok Bot mascots** from the main list for the welcome-screen study from
+`main-2.mp4`. All nine characters are drawn as native vector paths: green cloud,
+pink blob, brown circle, purple droplet, red blob, amber circle, teal circle,
+blue rounded square, and orange hexagon. The composition follows the clip's
+positions, colors, slow drift, and body tilts. Each bot has its own random
+expression sequence, hold durations, glances, and blink timing. Expressions
+blend smoothly and stay consistent across redraws; replay creates fresh sequences.
+After the reference's initial drift, the movement returns smoothly and repeats.
+
+Tap a floating bot to cycle through brief happy, surprised, curious, and blinking
+reactions. The reference's **Sign in** button opens **Meet the bots**, a local
+reaction playground. It does not perform authentication. All nine are visible
+in full there; choose Auto, Curious, Happy, Surprised, Sleepy, or Blink for the
+whole group, or tap individual cards to change their expressions. Replay
+restarts the animations; **Replay welcome** returns to the opening composition.
+
+`GrokBotArtwork` is reusable with a bot, reaction, and time. The animations use
+`TimelineView` and `Canvas` without video playback, image assets, or dependencies.
+Reduce Motion holds a still pose while preserving reaction selection, and the
+clock pauses when the app is inactive. The demo supports iOS 17.5 and includes
+standalone welcome and gallery previews.
+
 ## Ultracode
 
 Open **Ultracode** from the main list. The effort modal opens automatically.

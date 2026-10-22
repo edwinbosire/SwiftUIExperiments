@@ -3,23 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D2B000000000000000000001 /* UltracodeDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A000000000000000000001 /* UltracodeDemoView.swift */; };
-		D1B000000000000000000003 /* DynamicLayoutDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A000000000000000000003 /* DynamicLayoutDemoView.swift */; };
-		D1B000000000000000000002 /* ReorderableFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A000000000000000000002 /* ReorderableFlow.swift */; };
-		D1B000000000000000000001 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A000000000000000000001 /* FlowLayout.swift */; };
-		C0DEF10A3C00000200000002 /* CoverFlowDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DEF10A3C00000100000001 /* CoverFlowDemoView.swift */; };
-		7792BF6C7340AEE800F7B044 /* IntensityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B2C3FE244BCE41D59DC9F3 /* IntensityLevel.swift */; };
-		FD5EB902C1B06C19504C0F78 /* IntensityPickerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC0C029E63636E0F893B7A8 /* IntensityPickerStyle.swift */; };
-		5092AA101AEF0B896A8DC4C8 /* IntensityTrackGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D711DBDD10E6F69895A59 /* IntensityTrackGeometry.swift */; };
-		34B53A13B057C89A79B9E3B1 /* IntensityPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4062195FBB1E164AD7C4F0 /* IntensityPicker.swift */; };
-		B551FEF8785F7AA6A6EDEFFA /* IntensityPickerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA565B65F67BFA68AC88AA4 /* IntensityPickerOverlay.swift */; };
-		A7029B3587678FF2EEC9AD88 /* ComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEA83D4ADCBC6E026B57183 /* ComposerBar.swift */; };
 		25C6DE4006CD00C3004F7D90 /* MockKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E9D8965A03416DFBCDB195 /* MockKeyboardView.swift */; };
-		F3FA0308BE06462B1B50D220 /* IntensityPickerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97E52054D91B36C855DF579 /* IntensityPickerDemoView.swift */; };
+		34B53A13B057C89A79B9E3B1 /* IntensityPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4062195FBB1E164AD7C4F0 /* IntensityPicker.swift */; };
+		5092AA101AEF0B896A8DC4C8 /* IntensityTrackGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D711DBDD10E6F69895A59 /* IntensityTrackGeometry.swift */; };
 		6425200D2C7B9DE300252FAC /* UI_ExperimentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6425200C2C7B9DE300252FAC /* UI_ExperimentsApp.swift */; };
 		6425200F2C7B9DE300252FAC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6425200E2C7B9DE300252FAC /* ContentView.swift */; };
 		642520112C7B9DE600252FAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 642520102C7B9DE600252FAC /* Assets.xcassets */; };
@@ -42,6 +32,16 @@
 		64E42B202D77B8D50012ED02 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E42B1F2D77B8D50012ED02 /* Palette.swift */; };
 		64E42B222D7BE7B00012ED02 /* StickyHeaderQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E42B212D7BE7B00012ED02 /* StickyHeaderQuestionView.swift */; };
 		64E42B382D8501210012ED02 /* Reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E42B372D8501200012ED02 /* Reader.swift */; };
+		7792BF6C7340AEE800F7B044 /* IntensityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B2C3FE244BCE41D59DC9F3 /* IntensityLevel.swift */; };
+		A7029B3587678FF2EEC9AD88 /* ComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEA83D4ADCBC6E026B57183 /* ComposerBar.swift */; };
+		B551FEF8785F7AA6A6EDEFFA /* IntensityPickerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA565B65F67BFA68AC88AA4 /* IntensityPickerOverlay.swift */; };
+		C0DEF10A3C00000200000002 /* CoverFlowDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DEF10A3C00000100000001 /* CoverFlowDemoView.swift */; };
+		D1B000000000000000000001 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A000000000000000000001 /* FlowLayout.swift */; };
+		D1B000000000000000000002 /* ReorderableFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A000000000000000000002 /* ReorderableFlow.swift */; };
+		D1B000000000000000000003 /* DynamicLayoutDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A000000000000000000003 /* DynamicLayoutDemoView.swift */; };
+		D2B000000000000000000001 /* UltracodeDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A000000000000000000001 /* UltracodeDemoView.swift */; };
+		F3FA0308BE06462B1B50D220 /* IntensityPickerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97E52054D91B36C855DF579 /* IntensityPickerDemoView.swift */; };
+		FD5EB902C1B06C19504C0F78 /* IntensityPickerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC0C029E63636E0F893B7A8 /* IntensityPickerStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,20 +62,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D2A000000000000000000001 /* UltracodeDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltracodeDemoView.swift; sourceTree = "<group>"; };
-		D1A000000000000000000003 /* DynamicLayoutDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLayoutDemoView.swift; sourceTree = "<group>"; };
-		D1A000000000000000000002 /* ReorderableFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableFlow.swift; sourceTree = "<group>"; };
-		D1A000000000000000000001 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
-		C0DEF10A3C00000100000001 /* CoverFlowDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverFlowDemoView.swift; sourceTree = "<group>"; };
-		39B2C3FE244BCE41D59DC9F3 /* IntensityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityLevel.swift; sourceTree = "<group>"; };
-		9CC0C029E63636E0F893B7A8 /* IntensityPickerStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPickerStyle.swift; sourceTree = "<group>"; };
 		0E0D711DBDD10E6F69895A59 /* IntensityTrackGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityTrackGeometry.swift; sourceTree = "<group>"; };
-		BB4062195FBB1E164AD7C4F0 /* IntensityPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPicker.swift; sourceTree = "<group>"; };
+		39B2C3FE244BCE41D59DC9F3 /* IntensityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityLevel.swift; sourceTree = "<group>"; };
 		3BA565B65F67BFA68AC88AA4 /* IntensityPickerOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPickerOverlay.swift; sourceTree = "<group>"; };
-		EAEA83D4ADCBC6E026B57183 /* ComposerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerBar.swift; sourceTree = "<group>"; };
-		99E9D8965A03416DFBCDB195 /* MockKeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKeyboardView.swift; sourceTree = "<group>"; };
-		B97E52054D91B36C855DF579 /* IntensityPickerDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPickerDemoView.swift; sourceTree = "<group>"; };
-		CC586AF015DE6E40DA7403EA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		642520092C7B9DE300252FAC /* UI-Experiments.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UI-Experiments.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6425200C2C7B9DE300252FAC /* UI_ExperimentsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UI_ExperimentsApp.swift; sourceTree = "<group>"; };
 		6425200E2C7B9DE300252FAC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -103,7 +92,22 @@
 		64E42B1F2D77B8D50012ED02 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		64E42B212D7BE7B00012ED02 /* StickyHeaderQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyHeaderQuestionView.swift; sourceTree = "<group>"; };
 		64E42B372D8501200012ED02 /* Reader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reader.swift; sourceTree = "<group>"; };
+		99E9D8965A03416DFBCDB195 /* MockKeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKeyboardView.swift; sourceTree = "<group>"; };
+		9CC0C029E63636E0F893B7A8 /* IntensityPickerStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPickerStyle.swift; sourceTree = "<group>"; };
+		B97E52054D91B36C855DF579 /* IntensityPickerDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPickerDemoView.swift; sourceTree = "<group>"; };
+		BB4062195FBB1E164AD7C4F0 /* IntensityPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPicker.swift; sourceTree = "<group>"; };
+		C0DEF10A3C00000100000001 /* CoverFlowDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverFlowDemoView.swift; sourceTree = "<group>"; };
+		CC586AF015DE6E40DA7403EA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D1A000000000000000000001 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		D1A000000000000000000002 /* ReorderableFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableFlow.swift; sourceTree = "<group>"; };
+		D1A000000000000000000003 /* DynamicLayoutDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLayoutDemoView.swift; sourceTree = "<group>"; };
+		D2A000000000000000000001 /* UltracodeDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltracodeDemoView.swift; sourceTree = "<group>"; };
+		EAEA83D4ADCBC6E026B57183 /* ComposerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		649876F6308AD08600DD1F93 /* GrokBot */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = GrokBot; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		642520062C7B9DE300252FAC /* Frameworks */ = {
@@ -153,6 +157,7 @@
 		6425200B2C7B9DE300252FAC /* UI-Experiments */ = {
 			isa = PBXGroup;
 			children = (
+				649876F6308AD08600DD1F93 /* GrokBot */,
 				D1A000000000000000000001 /* FlowLayout.swift */,
 				D1A000000000000000000002 /* ReorderableFlow.swift */,
 				D1A000000000000000000003 /* DynamicLayoutDemoView.swift */,
@@ -255,6 +260,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				649876F6308AD08600DD1F93 /* GrokBot */,
 			);
 			name = "UI-Experiments";
 			productName = "UI-Experiments";

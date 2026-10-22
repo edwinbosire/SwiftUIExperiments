@@ -12,6 +12,14 @@ struct ContentView: View {
 		NavigationStack {
 			List {
 				NavigationLink {
+					GrokBotDemoView()
+				} label: {
+					Label("Grok Bot mascots", systemImage: "eyes")
+						.font(.title3)
+				}
+				.accessibilityIdentifier("grok-bot-demo")
+
+				NavigationLink {
 					UltracodeDemoView()
 				} label: {
 					Label("Ultracode", systemImage: "guitars.fill")

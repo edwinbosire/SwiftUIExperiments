@@ -10,6 +10,66 @@ import XCTest
 
 final class UI_ExperimentsTests: XCTestCase {
 
+    func testGrokRandomReactionsAreStableAcrossRedrawsAndIndependentBetweenBots() {
+        let tracks = GrokBot.allCases.map { GrokAutonomousReactions(seed: UInt64($0.rawValue + 1) * 1_234_567) }
+        var expressions: [[Double]] = []
+        var blinks: [[Double]] = []
+        for track in tracks {
+            var expressionSamples: [Double] = []
+            var blinkSamples: [Double] = []
+            for time in stride(from: 0.0, through: 60, by: 0.1) {
+                let pose = grokPoseValues(track.pose(at: time))
+                XCTAssertEqual(pose, grokPoseValues(track.pose(at: time)), "A redraw must preserve the pose")
+                expressionSamples.append(contentsOf: pose)
+                blinkSamples.append(track.blinkAmount(at: time))
+            }
+            expressions.append(expressionSamples)
+            blinks.append(blinkSamples)
+        }
+        XCTAssertEqual(Set(expressions).count, 9, "Each mascot needs its own expression sequence")
+        XCTAssertEqual(Set(blinks).count, 9, "Blinks must also have independent timing")
+    }
+
+    func testGrokRandomExpressionsAndBlinksTransitionSmoothly() {
+        for bot in GrokBot.allCases {
+            let track = GrokAutonomousReactions(seed: UInt64(bot.rawValue + 1) * 1_234_567)
+            var previous = grokPoseValues(GrokEyePose.pose(for: bot, reaction: .automatic, time: 0, autonomousReactions: track))
+            for time in stride(from: 1.0 / 120, through: 30, by: 1.0 / 120) {
+                let pose = GrokEyePose.pose(for: bot, reaction: .automatic, time: time, autonomousReactions: track)
+                let values = grokPoseValues(pose)
+                for (before, after) in zip(previous, values) {
+                    XCTAssertTrue(after.isFinite)
+                    XCTAssertLessThan(abs(after - before), 0.12, "\(bot.name) jumped at \(time)")
+                }
+                XCTAssertGreaterThan(pose.height, 0)
+                previous = values
+            }
+        }
+    }
+
+    private func grokPoseValues(_ pose: GrokEyePose) -> [Double] {
+        [pose.x, pose.y, pose.width, pose.height, pose.separation, pose.leftTilt, pose.rightTilt]
+    }
+
+    func testGrokDriftRemainsContinuousAcrossReturnAndLoopBoundaries() {
+        let size = CGSize(width: 390, height: 844)
+        let duration = 9.617
+        let step = 0.001
+
+        for bot in GrokBot.allCases {
+            for boundary in [duration, 3 * duration, 4 * duration] {
+                let before = bot.position(at: boundary - step, in: size)
+                let center = bot.position(at: boundary, in: size)
+                let after = bot.position(at: boundary + step, in: size)
+                XCTAssertLessThan(hypot(after.x - before.x, after.y - before.y), 0.03, "\(bot.name) must not jump at \(boundary)")
+                let velocityBefore = CGPoint(x: (center.x - before.x) / step, y: (center.y - before.y) / step)
+                let velocityAfter = CGPoint(x: (after.x - center.x) / step, y: (after.y - center.y) / step)
+                XCTAssertEqual(velocityBefore.x, velocityAfter.x, accuracy: 0.01)
+                XCTAssertEqual(velocityBefore.y, velocityAfter.y, accuracy: 0.01)
+            }
+        }
+    }
+
     func testFlexibleItemsShareRemainingSpaceWithoutResizingFixedItems() {
         let result = FlowArrangement(sizes: [
             CGSize(width: 100, height: 80),
