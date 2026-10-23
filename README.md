@@ -1,6 +1,11 @@
 # SwiftUIExperiments
 
+A collection of interactive SwiftUI demos, available from the app's **Daily Rituals**
+main list. Screenshots below were captured on an iPhone 17 Pro simulator running iOS 26.5.
+
 ## X stock graph
+
+<img src="Resources/Screenshots/x-stock-graph.jpg" alt="X stock graph showing the NVIDIA quote, intraday price chart, and range controls" width="280">
 
 Open **X stock graph** from the main list for the stock-card interaction from
 `main-3.mp4`. The dark search screen, NVIDIA quote, green area fill, gray after-hours
@@ -23,6 +28,11 @@ and VoiceOver supports adjustable price inspection and a Show latest price actio
 The demo supports iOS 17.5 and includes a standalone SwiftUI preview.
 
 ## Grok Bot mascots
+
+<p>
+  <img src="Resources/Screenshots/grok-bot-mascots.jpg" alt="Grok Bot welcome screen with colorful floating mascots" width="280">
+  <img src="Resources/Screenshots/grok-bot-reactions.jpg" alt="Meet the bots gallery with individual mascots and reaction controls" width="280">
+</p>
 
 Open **Grok Bot mascots** from the main list for the welcome-screen study from
 `main-2.mp4`. All nine characters are drawn as native vector paths: green cloud,
@@ -48,6 +58,8 @@ standalone welcome and gallery previews.
 
 ## Ultracode
 
+<img src="Resources/Screenshots/ultracode.jpg" alt="Effort picker with the animated purple Ultracode row and pixel guitarist" width="280">
+
 Open **Ultracode** from the main list. The effort modal opens automatically.
 Its final row fades from white to aubergine, introduces an orange pixel mascot,
 then brings out an electric guitar, floating gold notes, and traveling square-grid
@@ -67,6 +79,8 @@ The sheet scrolls at larger text sizes and supports the iOS 17.5 deployment targ
 `UltracodeDemoView.swift` also includes a standalone preview.
 
 ## Dynamic layout
+
+<img src="Resources/Screenshots/dynamic-layout.jpg" alt="Dynamic layout with eight colored rectangles of fixed and flexible widths" width="280">
 
 Open **Dynamic layout** from the app's main list. Touch and hold a colored rectangle,
 drag to rearrange the layout live, and release to place it. Reset restores the sample order.
@@ -96,10 +110,12 @@ standalone SwiftUI preview in `DynamicLayoutDemoView.swift`.
 
 ## Animated checkbox
 
-Using layering technique to animate a check box when selected
+<img src="Resources/Screenshots/animated-checkbox.jpg" alt="Daily Rituals list with a blue checked item and strikethrough text beside unchecked items" width="280">
 
-![check box](/Resources/screen_recording.gif "Animated Checkbox")
+Tap a checkbox beside a ritual on the main list to toggle its completed state.
+Layered shapes animate the checkmark, blue fill, and bounce while the label gains a strikethrough.
 
+![Animated checkbox demonstration](Resources/screen_recording.gif "Animated Checkbox")
 
 ```swift
 struct CheckMark: View {
@@ -145,3 +161,46 @@ struct CheckMark: View {
 	}
 }
 ```
+
+## Quiz Page
+
+<img src="Resources/Screenshots/quiz-page.jpg" alt="Quiz Page showing a mock test question about British Overseas territories and answer choices" width="280">
+
+Open **Quiz Page** from the main list for a mock-test screen with a scrolling
+question and multiple-choice answers. Select up to two options; tap a selected
+option again to clear it. `StickyHeaderQuestionView.swift` contains the question,
+answer selection, and scroll-position tracking for the sticky-header experiment.
+
+## HTML highlighter
+
+<img src="Resources/Screenshots/html-highlighter.jpg" alt="HTML highlighter showing Life in the UK content and a Saved Highlights list" width="280">
+
+Open **HTML highlighter** from the main list to read the sample **Life in the UK**
+HTML page. Select text to add it to **Saved Highlights**. The demo connects a
+`WKWebView` to SwiftUI through JavaScript messages and stores highlights locally.
+Use **Reload** to read the saved list or **Remove All** to clear it.
+
+## Intensity picker
+
+<img src="Resources/Screenshots/intensity-picker.jpg" alt="Intensity picker open at Medium with a blue slider above a blurred mock keyboard" width="280">
+
+Open **Intensity picker** from the main list, then tap the blue gauge in the
+composer. The three-stop slider expands from the composer while the background
+blurs and dims. Drag or tap the track to change intensity; releasing snaps the
+knob to the nearest stop. Tap outside the panel to dismiss it.
+
+See the [Intensity picker README](UI-Experiments/IntensityPicker/README.md) for
+the reusable control, presentation modifier, geometry, and accessibility details.
+
+## Cover Flow
+
+<p>
+  <img src="Resources/Screenshots/cover-flow.jpg" alt="Cover Flow library with a centered Bright Objects book cover and neighboring books" width="280">
+  <img src="Resources/Screenshots/cover-flow-detail.jpg" alt="Expanded Bright Objects book details with a synopsis and reading metadata" width="280">
+</p>
+
+Open **Cover Flow** from the main list. Swipe horizontally to browse the book
+covers, then tap a cover to flip and expand it into a detail card. Tap the detail
+card to expand it to full screen. Drag down or use the close button to return to
+the library. The demo uses sample books, native SwiftUI artwork, and a reduced-motion
+transition when Reduce Motion is enabled.
