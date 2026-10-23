@@ -1,7 +1,10 @@
 # SwiftUIExperiments
 
-A collection of interactive SwiftUI demos, available from the app's **Daily Rituals**
-main list. Screenshots below were captured on an iPhone 17 Pro simulator running iOS 26.5.
+A collection of interactive SwiftUI demos, available from the app's main feature
+list. Screenshots below were captured on an iPhone 17 Pro simulator running iOS 26.5.
+
+Each experiment keeps its source and supporting files in a feature folder under
+`UI-Experiments/`. The app entry point and main menu remain at the top level.
 
 ## X stock graph
 
@@ -76,7 +79,8 @@ The animation uses SwiftUI `TimelineView` and `Canvas` with procedural pixel art
 no video playback, external assets, or dependencies are needed. Reduce Motion
 shows a still composition, and the timeline pauses while the app is inactive.
 The sheet scrolls at larger text sizes and supports the iOS 17.5 deployment target.
-`UltracodeDemoView.swift` also includes a standalone preview.
+[`Ultracode/UltracodeDemoView.swift`](UI-Experiments/Ultracode/UltracodeDemoView.swift)
+also includes a standalone preview.
 
 ## Dynamic layout
 
@@ -106,7 +110,8 @@ animate, and newly added rectangles scroll into view.
   sample does not automatically scroll at the viewport edges.
 
 The sample supports the project's iOS 17.5 deployment target and includes a
-standalone SwiftUI preview in `DynamicLayoutDemoView.swift`.
+standalone SwiftUI preview in
+[`DynamicLayout/DynamicLayoutDemoView.swift`](UI-Experiments/DynamicLayout/DynamicLayoutDemoView.swift).
 
 ## Animated checkbox
 
@@ -169,7 +174,8 @@ struct CheckMark: View {
 
 Open **Quiz Page** from the main list for a mock-test screen with a scrolling
 question and multiple-choice answers. Select up to two options; tap a selected
-option again to clear it. `StickyHeaderQuestionView.swift` contains the question,
+option again to clear it.
+[`Quiz/StickyHeaderQuestionView.swift`](UI-Experiments/Quiz/StickyHeaderQuestionView.swift) contains the question,
 answer selection, and scroll-position tracking for the sticky-header experiment.
 
 ## HTML highlighter
