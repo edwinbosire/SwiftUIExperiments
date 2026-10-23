@@ -28,6 +28,14 @@ struct ContentView: View {
 				.accessibilityIdentifier("grok-bot-demo")
 
 				NavigationLink {
+					DuoOwlDemoView()
+				} label: {
+					Label("Duo owl", systemImage: "bird.fill")
+						.font(.title3)
+				}
+				.accessibilityIdentifier("duo-owl-demo")
+
+				NavigationLink {
 					UltracodeDemoView()
 				} label: {
 					Label("Ultracode", systemImage: "guitars.fill")
