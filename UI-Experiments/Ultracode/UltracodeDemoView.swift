@@ -11,7 +11,7 @@ struct UltracodeDemoView: View {
                 .frame(width: 62, height: 44)
                 .padding(.top, 100)
                 .accessibilityHidden(true)
-            Text("Back at it, pal!")
+            Text("Back at it, Edwin!")
                 .font(.system(.title, design: .serif))
             Spacer()
             Button {

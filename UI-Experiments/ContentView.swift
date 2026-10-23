@@ -80,7 +80,7 @@ struct ContentView: View {
 				}
 
 			}
-			.navigationTitle("Daily Rituals")
+			.navigationTitle("UI Experiements")
 			.navigationBarTitleDisplayMode(.large)
 		}
 
