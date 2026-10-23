@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4B000000000000000000001 /* AnimatedCheckboxDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A000000000000000000001 /* AnimatedCheckboxDemoView.swift */; };
 		25C6DE4006CD00C3004F7D90 /* MockKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E9D8965A03416DFBCDB195 /* MockKeyboardView.swift */; };
 		34B53A13B057C89A79B9E3B1 /* IntensityPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB4062195FBB1E164AD7C4F0 /* IntensityPicker.swift */; };
 		5092AA101AEF0B896A8DC4C8 /* IntensityTrackGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D711DBDD10E6F69895A59 /* IntensityTrackGeometry.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D4A000000000000000000001 /* AnimatedCheckboxDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedCheckboxDemoView.swift; sourceTree = "<group>"; };
 		0E0D711DBDD10E6F69895A59 /* IntensityTrackGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityTrackGeometry.swift; sourceTree = "<group>"; };
 		39B2C3FE244BCE41D59DC9F3 /* IntensityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityLevel.swift; sourceTree = "<group>"; };
 		3BA565B65F67BFA68AC88AA4 /* IntensityPickerOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityPickerOverlay.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				6425200C2C7B9DE300252FAC /* UI_ExperimentsApp.swift */,
 				64E42B372D8501200012ED02 /* Reader.swift */,
 				6425200E2C7B9DE300252FAC /* ContentView.swift */,
+				D4A000000000000000000001 /* AnimatedCheckboxDemoView.swift */,
 				642520372C9B954500252FAC /* Charts.swift */,
 				64A09CA12D449F4A00029CDC /* Goals.swift */,
 				64A09CA32D4C1CFE00029CDC /* UKTest.swift */,
@@ -399,6 +402,7 @@
 				64A09CE42D72598300029CDC /* QuestionViewv2.swift in Sources */,
 				6451F9082D8E1D2C00D1EB16 /* HighlightableWebView.swift in Sources */,
 				6425200F2C7B9DE300252FAC /* ContentView.swift in Sources */,
+				D4B000000000000000000001 /* AnimatedCheckboxDemoView.swift in Sources */,
 				64A09CA42D4C1CFE00029CDC /* UKTest.swift in Sources */,
 				64A09CE22D72586400029CDC /* QuestionView.swift in Sources */,
 				6425200D2C7B9DE300252FAC /* UI_ExperimentsApp.swift in Sources */,

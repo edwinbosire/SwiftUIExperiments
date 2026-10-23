@@ -110,9 +110,10 @@ standalone SwiftUI preview in `DynamicLayoutDemoView.swift`.
 
 ## Animated checkbox
 
-<img src="Resources/Screenshots/animated-checkbox.jpg" alt="Daily Rituals list with a blue checked item and strikethrough text beside unchecked items" width="280">
+<img src="Resources/Screenshots/animated-checkbox.jpg" alt="Animated checkbox demo with four rituals, a blue checked item, and strikethrough text beside unchecked items" width="280">
 
-Tap a checkbox beside a ritual on the main list to toggle its completed state.
+Open **Animated checkbox** from the main list to see all four sample rituals.
+Tap a checkbox beside a ritual to toggle its completed state.
 Layered shapes animate the checkmark, blue fill, and bounce while the label gains a strikethrough.
 
 ![Animated checkbox demonstration](Resources/screen_recording.gif "Animated Checkbox")
