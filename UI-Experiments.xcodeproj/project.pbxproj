@@ -107,6 +107,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		649876F6308AD08600DD1F93 /* GrokBot */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = GrokBot; sourceTree = "<group>"; };
+		D3A000000000000000000001 /* XStockGraph */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = XStockGraph; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +158,7 @@
 		6425200B2C7B9DE300252FAC /* UI-Experiments */ = {
 			isa = PBXGroup;
 			children = (
+				D3A000000000000000000001 /* XStockGraph */,
 				649876F6308AD08600DD1F93 /* GrokBot */,
 				D1A000000000000000000001 /* FlowLayout.swift */,
 				D1A000000000000000000002 /* ReorderableFlow.swift */,
@@ -263,6 +265,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				649876F6308AD08600DD1F93 /* GrokBot */,
+				D3A000000000000000000001 /* XStockGraph */,
 			);
 			name = "UI-Experiments";
 			productName = "UI-Experiments";

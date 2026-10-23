@@ -12,6 +12,14 @@ struct ContentView: View {
 		NavigationStack {
 			List {
 				NavigationLink {
+					XStockGraphDemoView()
+				} label: {
+					Label("X stock graph", systemImage: "chart.xyaxis.line")
+						.font(.title3)
+				}
+				.accessibilityIdentifier("x-stock-demo")
+
+				NavigationLink {
 					GrokBotDemoView()
 				} label: {
 					Label("Grok Bot mascots", systemImage: "eyes")

@@ -10,6 +10,72 @@ import XCTest
 
 final class UI_ExperimentsTests: XCTestCase {
 
+    func testStockSessionPathsKeepTheirIdentitiesAndJoinThroughoutRangeTransitions() throws {
+        let ranges = XStockRange.allCases.map { XStockReference.series(for: $0) }
+        let ids = try XCTUnwrap(ranges.first).samples.map(\.id)
+        for series in ranges {
+            XCTAssertEqual(series.regularLineSamples.map(\.id), ids)
+            XCTAssertEqual(series.afterHoursLineSamples.map(\.id), ids)
+        }
+
+        for source in ranges {
+            for destination in ranges {
+                let sourceClose = try XCTUnwrap(source.regularLineSamples.last)
+                let destinationClose = try XCTUnwrap(destination.regularLineSamples.last)
+                let sourceAfterHoursStart = try XCTUnwrap(source.afterHoursLineSamples.first)
+                let destinationAfterHoursStart = try XCTUnwrap(destination.afterHoursLineSamples.first)
+                for progress in stride(from: 0.0, through: 1.0, by: 0.1) {
+                    func interpolate(_ start: Double, _ end: Double) -> Double {
+                        start + (end - start) * progress
+                    }
+                    let boundary = interpolate(sourceClose.fraction, destinationClose.fraction)
+                    XCTAssertEqual(boundary, interpolate(sourceAfterHoursStart.fraction, destinationAfterHoursStart.fraction), accuracy: 0.000001)
+                    XCTAssertEqual(interpolate(sourceClose.price, destinationClose.price), interpolate(sourceAfterHoursStart.price, destinationAfterHoursStart.price), accuracy: 0.000001)
+                    for (start, end) in zip(source.regularLineSamples, destination.regularLineSamples) {
+                        XCTAssertLessThanOrEqual(interpolate(start.fraction, end.fraction), boundary + 0.000001)
+                    }
+                    for (start, end) in zip(source.afterHoursLineSamples, destination.afterHoursLineSamples) {
+                        XCTAssertGreaterThanOrEqual(interpolate(start.fraction, end.fraction), boundary - 0.000001)
+                    }
+                }
+            }
+        }
+    }
+
+    func testStockScrubbingClampsToEndpointsAndPreservesSessionBoundary() throws {
+        for range in XStockRange.allCases {
+            let series = XStockReference.series(for: range)
+            XCTAssertEqual(series.sample(at: -1).id, series.samples.first?.id)
+            XCTAssertEqual(series.sample(at: 2).id, series.samples.last?.id)
+            XCTAssertEqual(try XCTUnwrap(series.regularSamples.last).price, 198.87, accuracy: 0.0001)
+            if let afterHoursStart = series.afterHoursSamples.first {
+                XCTAssertEqual(afterHoursStart.id, series.regularSamples.last?.id)
+                XCTAssertEqual(afterHoursStart.price, 198.87, accuracy: 0.0001)
+            }
+            for sample in series.samples {
+                XCTAssertTrue(sample.price.isFinite)
+                XCTAssertTrue(series.domain.contains(sample.price))
+            }
+        }
+        XCTAssertEqual(XStockReference.priceLabel(198.87), "$198.87")
+    }
+
+    func testStockCandlesContainTheirBodiesAndHaveDistinctIntervals() {
+        for range in XStockRange.allCases {
+            let series = XStockReference.series(for: range)
+            for (style, count) in [(XStockChartStyle.thirtyMinutes, 104), (.hour, 52), (.fourHours, 13)] {
+                let candles = series.candles(for: style)
+                XCTAssertEqual(candles.count, count)
+                XCTAssertEqual(Set(candles.map(\.id)).count, count)
+                for candle in candles {
+                    XCTAssertGreaterThanOrEqual(candle.high, max(candle.open, candle.close))
+                    XCTAssertLessThanOrEqual(candle.low, min(candle.open, candle.close))
+                    XCTAssertTrue(candle.close.isFinite)
+                }
+            }
+        }
+    }
+
     func testGrokRandomReactionsAreStableAcrossRedrawsAndIndependentBetweenBots() {
         let tracks = GrokBot.allCases.map { GrokAutonomousReactions(seed: UInt64($0.rawValue + 1) * 1_234_567) }
         var expressions: [[Double]] = []

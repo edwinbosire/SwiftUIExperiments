@@ -1,5 +1,27 @@
 # SwiftUIExperiments
 
+## X stock graph
+
+Open **X stock graph** from the main list for the stock-card interaction from
+`main-3.mp4`. The dark search screen, NVIDIA quote, green area fill, gray after-hours
+line, range pills, floating chart-style menu, and sample post follow the reference.
+The five curves use fixed samples traced from the supplied video; this demo does
+not fetch live market data. The logo is cropped from the reference, and the
+sample post uses Edwin's supplied photo and **@B0SIRE** handle.
+
+Choose **1D**, **1W**, **1M**, **1Y**, or **ALL** to animate between the curves.
+Touch and drag anywhere on the chart to inspect a price: the crosshair follows
+the selected point, later prices dim, the quote updates, and a timestamp replaces
+the range controls. Releasing restores the current quote. Open the lower-right
+menu to select **Line**, **30m**, **1h**, or **4h** candlesticks.
+
+The graph uses native Swift Charts `LineMark`, `AreaMark`, `RuleMark`, `PointMark`,
+and `RectangleMark` with `ChartProxy` for touch selection. The 4h weekly candles
+also follow the video; other intervals aggregate the traced samples. Range and
+style changes provide haptics, Reduce Motion disables transition animations,
+and VoiceOver supports adjustable price inspection and a Show latest price action.
+The demo supports iOS 17.5 and includes a standalone SwiftUI preview.
+
 ## Grok Bot mascots
 
 Open **Grok Bot mascots** from the main list for the welcome-screen study from

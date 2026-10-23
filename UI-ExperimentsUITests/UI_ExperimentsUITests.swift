@@ -9,6 +9,53 @@ import XCTest
 
 final class UI_ExperimentsUITests: XCTestCase {
 
+    func testStockRangesScrubReleaseAndCandleStyles() {
+        let app = XCUIApplication()
+        app.launch()
+        app.buttons["x-stock-demo"].tap()
+        let price = app.staticTexts["x-stock-price"]
+        XCTAssertTrue(price.waitForExistence(timeout: 5))
+        XCTAssertEqual(price.label, "$198.87")
+
+        let expectedChanges = [
+            ("1W", "↑ $17.39 (+9.58%)"),
+            ("1M", "↑ $15.85 (+8.66%)"),
+            ("1Y", "↑ $198.38 (+40,736%)"),
+            ("ALL", "↑ $198.38 (+40,736%)"),
+            ("1D", "↑ $0.82 (+0.42%)")
+        ]
+        for (range, change) in expectedChanges {
+            app.buttons["x-stock-range-\(range)"].tap()
+            XCTAssertEqual(app.staticTexts["x-stock-change"].label, change)
+            XCTAssertEqual(price.label, "$198.87")
+        }
+
+        app.buttons["x-stock-range-1W"].tap()
+        let plot = app.descendants(matching: .any)["x-stock-plot"].firstMatch
+        plot.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)).press(
+            forDuration: 0.1,
+            thenDragTo: plot.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5)),
+            withVelocity: .slow,
+            thenHoldForDuration: 0.3
+        )
+        XCTAssertEqual(price.label, "$198.87", "Releasing the chart restores the current quote")
+        XCTAssertFalse(app.staticTexts["x-stock-timestamp"].exists)
+        XCTAssertTrue(app.buttons["x-stock-range-1W"].isHittable)
+
+        let styleButton = app.buttons["x-stock-chart-style"]
+        for style in ["30m", "1h", "4h", "Line"] {
+            styleButton.tap()
+            let option = app.buttons["x-stock-style-\(style)"]
+            XCTAssertTrue(option.waitForExistence(timeout: 3))
+            option.tap()
+            XCTAssertEqual(styleButton.value as? String, style == "Line" ? "Line" : "\(style) candles")
+            XCTAssertFalse(option.exists)
+        }
+
+        app.buttons["close-x-stock-demo"].tap()
+        XCTAssertTrue(app.buttons["x-stock-demo"].waitForExistence(timeout: 3))
+    }
+
     func testGrokReactionsApplyToAllNineAndReplayWelcome() {
         let app = XCUIApplication()
         app.launch()
