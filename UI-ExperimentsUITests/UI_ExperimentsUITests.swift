@@ -9,6 +9,67 @@ import XCTest
 
 final class UI_ExperimentsUITests: XCTestCase {
 
+    func testRiveOnboardingSelectionNameBackCompletionReplayAndSkip() {
+        let app = XCUIApplication()
+        app.launch()
+        app.openCatalogueExperiment("rive-onboarding-demo")
+        let next = app.buttons["rive-onboarding-next"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        XCTAssertEqual(next.label, "Find my adventure")
+        next.tap()
+        let coast = app.buttons["rive-onboarding-style-coast"]
+        XCTAssertTrue(coast.waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["rive-onboarding-style-city"].isHittable)
+        coast.tap()
+        XCTAssertEqual(coast.value as? String, "Selected")
+        next.tap()
+        let name = app.textFields["rive-onboarding-name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 3))
+        name.tap()
+        if let value = name.value as? String, value != name.placeholderValue {
+            name.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: value.count))
+        }
+        name.typeText("Alex")
+        app.keyboards.buttons["Done"].tap()
+        app.buttons["rive-onboarding-back"].tap()
+        XCTAssertEqual(coast.value as? String, "Selected")
+        next.tap()
+        XCTAssertEqual(name.value as? String, "Alex")
+        next.tap()
+        XCTAssertTrue(app.staticTexts["Your travel style is saved."].waitForExistence(timeout: 3))
+        XCTAssertEqual(next.label, "Start exploring")
+        app.buttons["rive-onboarding-back"].tap()
+        XCTAssertEqual(next.label, "Find my adventure")
+        app.buttons["rive-onboarding-skip"].tap()
+        XCTAssertTrue(name.waitForExistence(timeout: 3))
+        XCTAssertEqual(name.value as? String, "Alex")
+        app.buttons["close-rive-onboarding"].tap()
+        XCTAssertTrue(app.buttons["rive-onboarding-demo"].waitForExistence(timeout: 3))
+        app.openCatalogueExperiment("rive-onboarding-demo")
+        app.buttons["rive-onboarding-skip"].tap()
+        XCTAssertEqual(name.value as? String, "Alex")
+        next.tap()
+        next.tap()
+        XCTAssertTrue(app.buttons["rive-onboarding-demo"].waitForExistence(timeout: 3))
+    }
+
+    func testRiveOnboardingKeepsNavigationReachableAtAccessibilityTextSize() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        app.openCatalogueExperiment("rive-onboarding-demo")
+        let next = app.buttons["rive-onboarding-next"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        XCTAssertTrue(next.isHittable)
+        next.tap()
+        XCTAssertTrue(app.buttons["rive-onboarding-back"].isHittable)
+        app.buttons["rive-onboarding-skip"].tap()
+        next.tap()
+        XCTAssertEqual(next.label, "Start exploring")
+        XCTAssertTrue(next.isHittable)
+        app.buttons["close-rive-onboarding"].tap()
+    }
+
     func testStockRangesScrubReleaseAndCandleStyles() {
         let app = XCUIApplication()
         app.launch()

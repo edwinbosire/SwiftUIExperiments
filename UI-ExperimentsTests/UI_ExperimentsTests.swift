@@ -10,6 +10,105 @@ import XCTest
 
 final class UI_ExperimentsTests: XCTestCase {
 
+    @MainActor
+    func testTravelOnboardingNavigationKeepsPreferencesAndCompletesOnlyAtTheEnd() {
+        let state = TravelOnboardingState()
+        state.back()
+        XCTAssertEqual(state.step, .discover)
+        XCTAssertFalse(state.isComplete)
+        state.style = .coast
+        state.travelerName = "  Alex  "
+        XCTAssertEqual(state.passName, "ALEX")
+        state.next()
+        state.next()
+        XCTAssertEqual(state.step, .traveler)
+        XCTAssertFalse(state.isComplete)
+        state.back()
+        XCTAssertEqual(state.step, .travelStyle)
+        state.skipIntroduction()
+        XCTAssertEqual(state.step, .traveler)
+        state.next()
+        XCTAssertTrue(state.isComplete)
+        XCTAssertEqual(state.progress, 100)
+        state.next()
+        state.back()
+        XCTAssertTrue(state.isComplete)
+        state.replay()
+        XCTAssertEqual(state.step, .discover)
+        XCTAssertFalse(state.isComplete)
+        XCTAssertEqual(state.style, .coast)
+        XCTAssertEqual(state.displayName, "Alex")
+        state.travelerName = " \n "
+        XCTAssertEqual(state.passName, "WANDERER")
+    }
+
+    @MainActor
+    func testTravelRiveBundledAssetBindsActualBoardingPassTextAndPreferences() throws {
+        let controller = TravelRiveController()
+        controller.load()
+        XCTAssertNil(controller.errorDescription)
+        let instance = try XCTUnwrap(controller.bindingInstance)
+        let model = try XCTUnwrap(controller.viewModel?.riveModel)
+        let state = TravelOnboardingState()
+        state.travelerName = "Alex"
+        for style in OnboardingTravelStyle.allCases {
+            state.style = style
+            controller.update(from: state, reduceMotion: true)
+            // Exercise the imported .riv's bindings, rather than just the Swift setters.
+            model.stateMachine?.advance(by: 0)
+            model.artboard.advance(by: 0)
+            XCTAssertEqual(model.artboard.textRun("Traveler value")?.text(), "ALEX")
+            XCTAssertEqual(model.artboard.textRun("Destination value")?.text(), "LONDON")
+            XCTAssertEqual(instance.numberProperty(fromPath: "travelStyle")?.value, style.riveValue)
+            XCTAssertEqual(instance.booleanProperty(fromPath: "reduceMotion")?.value, true)
+        }
+        state.skipIntroduction()
+        state.next()
+        controller.update(from: state, reduceMotion: false)
+        model.stateMachine?.advance(by: 0)
+        XCTAssertEqual(instance.booleanProperty(fromPath: "isComplete")?.value, true)
+        XCTAssertEqual(instance.numberProperty(fromPath: "progress")?.value, 100)
+    }
+
+    @MainActor
+    func testRiveAirportDisplayCyclesEveryCityAndCodeAndLoopsAfterCompletion() throws {
+        let controller = TravelRiveController()
+        controller.load()
+        XCTAssertNil(controller.errorDescription)
+        let model = try XCTUnwrap(controller.viewModel?.riveModel)
+        let machine = try XCTUnwrap(model.stateMachine)
+        let state = TravelOnboardingState()
+        state.skipIntroduction()
+        state.next()
+        controller.update(from: state, reduceMotion: false)
+
+        func advance(_ seconds: Double) {
+            for _ in 0..<Int((seconds * 60).rounded()) {
+                machine.advance(by: 1.0 / 60.0)
+                model.artboard.advance(by: 1.0 / 60.0)
+            }
+        }
+        func assertDestination(_ code: String, _ city: String, line: UInt = #line) {
+            XCTAssertEqual(model.artboard.textRun("Destination value")?.text(), city, line: line)
+            let visibleCode = (1...3).compactMap {
+                model.artboard.textRun("Airport \($0) Top turning leaf value")?.text()
+            }.joined()
+            XCTAssertEqual(visibleCode, code, line: line)
+        }
+        advance(0.1)
+        assertDestination("LHR", "LONDON")
+        for (code, city) in [("JFK", "NEW YORK"), ("NBO", "NAIROBI"), ("CPT", "CAPE TOWN"), ("DUB", "DUBLIN"), ("LHR", "LONDON")] {
+            advance(6)
+            assertDestination(code, city)
+        }
+        // Reduce Motion selects the settled London pose and stops cycling.
+        controller.update(from: state, reduceMotion: true)
+        advance(0.1)
+        assertDestination("LHR", "LONDON")
+        advance(14)
+        assertDestination("LHR", "LONDON")
+    }
+
     func testStockSessionPathsKeepTheirIdentitiesAndJoinThroughoutRangeTransitions() throws {
         let ranges = XStockRange.allCases.map { XStockReference.series(for: $0) }
         let ids = try XCTUnwrap(ranges.first).samples.map(\.id)

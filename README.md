@@ -6,6 +6,33 @@ list. Screenshots below were captured on an iPhone 17 Pro simulator running iOS 
 Each experiment keeps its source and supporting files in a feature folder under
 `UI-Experiments/`. The app entry point and main menu remain at the top level.
 
+## Rive Onboarding
+
+<p>
+  <img src="Resources/Screenshots/rive-onboarding.jpg" alt="Rive travel welcome with an animated suitcase, airplane, and boarding pass" width="240">
+  <img src="Resources/Screenshots/rive-onboarding-style.jpg" alt="Travel-style selection with animated Rive scenery and all three choices" width="240">
+  <img src="Resources/Screenshots/rive-onboarding-ready.jpg" alt="Onboarding completion with an orbiting airplane and saved travel preference" width="240">
+</p>
+
+Open **Rive Onboarding** for a three-step travel welcome: discover, choose
+mountains/coast/city, then personalize your boarding pass. The Rive illustration
+has a floating suitcase, drifting clouds, and a plane circling the globe.
+A split-flap boarding pass cycles LHR, JFK, NBO, CPT, and DUB with city captions,
+in sync with the plane's orbit. Choosing a travel style blends the scenery;
+typing your name updates the pass through Rive data binding. Finishing adds
+arrival sparkles and shows the saved travel preference.
+Back, Skip, Replay, and locally saved preferences are supported.
+
+[Watch the airport display and plane animation](Resources/Previews/rive-onboarding-airports.mp4).
+
+The official **RiveRuntime 6.28.1** package plays the bundled `.riv` offline.
+Reduce Motion holds still poses, background playback pauses, and native controls
+support VoiceOver and Dynamic Type. The editable CLI project is in
+[`Rive/TravelOnboarding`](Rive/TravelOnboarding); run
+`bash scripts/build-rive-onboarding.sh` to verify and rebuild the bundled asset.
+See the [feature README](UI-Experiments/RiveOnboarding/README.md) for the binding
+contract and integration details.
+
 ## X stock graph
 
 <img src="Resources/Screenshots/x-stock-graph.jpg" alt="X stock graph showing the NVIDIA quote, intraday price chart, and range controls" width="280">

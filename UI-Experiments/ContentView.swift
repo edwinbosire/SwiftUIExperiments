@@ -3,6 +3,10 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         ExperimentCatalogueView(experiments: [
+            CatalogueExperiment(id: "rive-onboarding-demo", title: "Rive Onboarding",
+                                detail: "A little journey, brought to life.", category: .motion, artwork: .journey) {
+                RiveOnboardingDemoView()
+            },
             CatalogueExperiment(id: "x-stock-demo", title: "X stock graph",
                                 detail: "Follow the curve. Feel every change.", category: .controls, artwork: .graph) {
                 XStockGraphDemoView()

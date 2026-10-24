@@ -24,6 +24,7 @@
 		7792BF6C7340AEE800F7B044 /* IntensityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B2C3FE244BCE41D59DC9F3 /* IntensityLevel.swift */; };
 		A7029B3587678FF2EEC9AD88 /* ComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEA83D4ADCBC6E026B57183 /* ComposerBar.swift */; };
 		B551FEF8785F7AA6A6EDEFFA /* IntensityPickerOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA565B65F67BFA68AC88AA4 /* IntensityPickerOverlay.swift */; };
+		F01000000000000000000001 /* RiveRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = F01000000000000000000002 /* RiveRuntime */; };
 		F3FA0308BE06462B1B50D220 /* IntensityPickerDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97E52054D91B36C855DF579 /* IntensityPickerDemoView.swift */; };
 		FD5EB902C1B06C19504C0F78 /* IntensityPickerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC0C029E63636E0F893B7A8 /* IntensityPickerStyle.swift */; };
 /* End PBXBuildFile section */
@@ -88,6 +89,7 @@
 		D0D000000000000000000001 /* DuoOwl */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DuoOwl; sourceTree = "<group>"; };
 		D34E2E8C30365F17F5075B58 /* AnimatedCheckbox */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AnimatedCheckbox; sourceTree = "<group>"; };
 		D3A000000000000000000001 /* XStockGraph */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = XStockGraph; sourceTree = "<group>"; };
+		F01000000000000000000003 /* RiveOnboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RiveOnboarding; sourceTree = "<group>"; };
 		FA4111B39E32821DEC2C18F1 /* Quiz */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Quiz; sourceTree = "<group>"; };
 		FE166F92CE0E69EEA8DCA190 /* Goals */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Goals; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -97,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F01000000000000000000001 /* RiveRuntime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,6 +143,7 @@
 		6425200B2C7B9DE300252FAC /* UI-Experiments */ = {
 			isa = PBXGroup;
 			children = (
+				F01000000000000000000003 /* RiveOnboarding */,
 				6425200C2C7B9DE300252FAC /* UI_ExperimentsApp.swift */,
 				6425200E2C7B9DE300252FAC /* ContentView.swift */,
 				CA7A10000000000000000001 /* Catalogue */,
@@ -258,10 +262,14 @@
 				D0D000000000000000000001 /* DuoOwl */,
 				D34E2E8C30365F17F5075B58 /* AnimatedCheckbox */,
 				D3A000000000000000000001 /* XStockGraph */,
+				F01000000000000000000003 /* RiveOnboarding */,
 				FA4111B39E32821DEC2C18F1 /* Quiz */,
 				FE166F92CE0E69EEA8DCA190 /* Goals */,
 			);
 			name = "UI-Experiments";
+			packageProductDependencies = (
+				F01000000000000000000002 /* RiveRuntime */,
+			);
 			productName = "UI-Experiments";
 			productReference = 642520092C7B9DE300252FAC /* UI-Experiments.app */;
 			productType = "com.apple.product-type.application";
@@ -334,6 +342,9 @@
 				Base,
 			);
 			mainGroup = 642520002C7B9DE300252FAC;
+			packageReferences = (
+				F01000000000000000000004 /* XCRemoteSwiftPackageReference "rive-ios" */,
+			);
 			productRefGroup = 6425200A2C7B9DE300252FAC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -750,6 +761,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F01000000000000000000004 /* XCRemoteSwiftPackageReference "rive-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rive-app/rive-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 6.28.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F01000000000000000000002 /* RiveRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F01000000000000000000004 /* XCRemoteSwiftPackageReference "rive-ios" */;
+			productName = RiveRuntime;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 642520012C7B9DE300252FAC /* Project object */;
 }
