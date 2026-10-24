@@ -15,7 +15,6 @@ struct HighlightableWebView: UIViewRepresentable {
 	@Binding var highlights: [Highlight]
 
 	func makeUIView(context: Context) -> WKWebView {
-		let st: StaticString = ""
 		// customized content controller
 		let userContentController = WKUserContentController()
 
@@ -36,10 +35,9 @@ struct HighlightableWebView: UIViewRepresentable {
 
 		let configuration = WKWebViewConfiguration()
 		configuration.userContentController = userContentController
-		configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-		configuration.selectionGranularity = .character
+		configuration.defaultWebpagePreferences = preferences
 
-		let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), configuration: configuration)
+		let webView = WKWebView(frame: .zero, configuration: configuration)
 		webView.navigationDelegate = context.coordinator
 		webView.isInspectable = true
 		webView.loadHTMLString(htmlContent, baseURL: nil)
@@ -48,19 +46,27 @@ struct HighlightableWebView: UIViewRepresentable {
 	}
 
 	func updateUIView(_ webView: WKWebView, context: Context) {
-		webView.loadHTMLString(htmlContent, baseURL: nil)
-	}
+        context.coordinator.parent = self
+        guard context.coordinator.loadedHTML != htmlContent || context.coordinator.loadedPageID != pageIdentifier else { return }
+        context.coordinator.loadedHTML = htmlContent
+        context.coordinator.loadedPageID = pageIdentifier
+        webView.loadHTMLString(htmlContent, baseURL: nil)
+    }
 
-	func makeCoordinator() -> Coordinator {
+    func makeCoordinator() -> Coordinator {
 		Coordinator(self)
 	}
 
 	class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
 		var parent: HighlightableWebView
+        var loadedHTML: String
+        var loadedPageID: String
 		private var highlightStorage = HighlightStorage()
 
 		init(_ parent: HighlightableWebView) {
 			self.parent = parent
+            loadedHTML = parent.htmlContent
+            loadedPageID = parent.pageIdentifier
 			super.init()
 		}
 
@@ -92,7 +98,6 @@ struct HighlightableWebView: UIViewRepresentable {
 			switch message.name {
 				case "errorHandler":
 					// You should actually handle the error :)
-					let error = (message.body as? [String: Any])?["message"] as? String ?? "unknown"
 					print("🚩 \(message.name): \(message.body)")
 				case "highlightHandler":
 					handleHighlighter()

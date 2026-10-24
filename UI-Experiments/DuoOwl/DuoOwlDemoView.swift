@@ -7,6 +7,7 @@ struct DuoOwlDemoView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     @State private var origin = Date()
     @State private var pausedAt: Date?
@@ -25,55 +26,31 @@ struct DuoOwlDemoView: View {
     }
 
     var body: some View {
-        GeometryReader { geo in
-            let side = min(geo.size.width - 48, geo.size.height * 0.5)
-            let owlOrigin = CGPoint(x: geo.size.width / 2,
-                                    y: geo.size.height * 0.5)
-            let owlFrame = CGRect(x: owlOrigin.x - side / 2,
-                                  y: owlOrigin.y - side / 2,
-                                  width: side, height: side)
-
-            ZStack {
-                DuoOwlPaper.color.ignoresSafeArea()
-
-                TimelineView(.animation(minimumInterval: 1.0 / 60,
-                                        paused: reduceMotion || scenePhase != .active)) { timeline in
-                    let now = max(0, (pausedAt ?? timeline.date).timeIntervalSince(origin) - suspension)
-                    let pose = currentPose(at: now)
-
-                    DuoOwlArtwork(pose: pose, time: now)
-                        .frame(width: side, height: side)
-                        .position(owlOrigin)
-                        .onChange(of: timeline.date) { _, _ in
-                            tick(now: now)
-                        }
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 24) {
+                    VStack(spacing: 8) {
+                        Text("Say hi to Duo")
+                            .font(.system(.title2, design: .rounded, weight: .bold))
+                        Text("Tap Duo to change his mood. Tap around him and his eyes will follow.")
+                            .font(.subheadline)
+                            .foregroundStyle(DuoOwlPaper.ink.opacity(0.65))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .multilineTextAlignment(.center)
+                    owlStage
+                        .frame(height: min(420, max(180, geometry.size.height * 0.52)))
+                    reactionRow
                 }
-
-                VStack(spacing: 6) {
-                    Text("Say hi to Duo")
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
-                        .foregroundStyle(DuoOwlPaper.ink)
-                    Text("Tap Duo to change his mood. Tap elsewhere and his eyes will follow.")
-                        .font(.system(size: 14, weight: .regular, design: .rounded))
-                        .foregroundStyle(DuoOwlPaper.ink.opacity(0.65))
-                        .multilineTextAlignment(.center)
-                }
-                .frame(width: geo.size.width - 48)
-                .position(x: geo.size.width / 2,
-                          y: owlOrigin.y - side / 2 - 56)
+                .foregroundStyle(DuoOwlPaper.ink)
+                .padding(20)
+                .frame(maxWidth: 760)
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
             }
-            .contentShape(Rectangle())
-            .onTapGesture { location in
-                handleTap(at: location,
-                          in: geo.size,
-                          owlFrame: owlFrame)
-            }
+            .scrollBounceBehavior(.basedOnSize)
+            .accessibilityIdentifier("duo-owl-scroll")
         }
-        .safeAreaInset(edge: .bottom) {
-            reactionRow
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-        }
+        .background(DuoOwlPaper.color.ignoresSafeArea())
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -96,6 +73,27 @@ struct DuoOwlDemoView: View {
                 pausedAt = nil
             }
         }
+    }
+
+    private var owlStage: some View {
+        GeometryReader { geometry in
+            let side = max(1, min(geometry.size.width - 32, geometry.size.height * 0.9))
+            let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+            let frame = CGRect(x: center.x - side / 2, y: center.y - side / 2, width: side, height: side)
+            TimelineView(.animation(minimumInterval: 1.0 / 60,
+                                    paused: reduceMotion || scenePhase != .active)) { timeline in
+                let now = max(0, (pausedAt ?? timeline.date).timeIntervalSince(origin) - suspension)
+                DuoOwlArtwork(pose: currentPose(at: now), time: now)
+                    .frame(width: side, height: side)
+                    .position(center)
+                    .onChange(of: timeline.date) { _, _ in tick(now: now) }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { location in
+                handleTap(at: location, in: geometry.size, owlFrame: frame)
+            }
+        }
+        .accessibilityIdentifier("duo-owl-stage")
     }
 
     // MARK: - Pose
@@ -156,7 +154,9 @@ struct DuoOwlDemoView: View {
     // MARK: - Chrome
 
     private var reactionRow: some View {
-        HStack(spacing: 8) {
+        LazyVGrid(columns: dynamicTypeSize.isAccessibilitySize
+                  ? [GridItem(.flexible())]
+                  : [GridItem(.adaptive(minimum: 80), spacing: 8)], spacing: 8) {
             ForEach(DuoReaction.allCases) { option in
                 Button {
                     trigger(option, at: elapsed())
@@ -165,10 +165,12 @@ struct DuoOwlDemoView: View {
                         Image(systemName: option.symbol)
                             .font(.system(size: 15, weight: .semibold))
                         Text(option.title)
-                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                            .font(.system(.caption2, design: .rounded, weight: .medium))
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .foregroundStyle(reaction == option ? .white : DuoOwlPaper.ink.opacity(0.78))
-                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, minHeight: 56)
                     .background(
                         RoundedRectangle(cornerRadius: 14, style: .continuous)
                             .fill(reaction == option
@@ -178,6 +180,8 @@ struct DuoOwlDemoView: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("\(option.title) reaction")
+                .accessibilityIdentifier("duo-reaction-\(option.title.lowercased())")
+                .accessibilityAddTraits(reaction == option ? .isSelected : [])
             }
         }
     }

@@ -6,25 +6,28 @@ struct UltracodeDemoView: View {
     @State private var selectedEffort: UltracodeEffort = .low
 
     var body: some View {
-        VStack(spacing: 22) {
+        GeometryReader { geometry in
+          ScrollView {
+           VStack(spacing: 22) {
             UltracodeMascot()
                 .frame(width: 62, height: 44)
-                .padding(.top, 100)
+                .padding(.top, min(100, geometry.size.height * 0.12))
                 .accessibilityHidden(true)
             Text("Back at it, Edwin!")
                 .font(.system(.title, design: .serif))
-            Spacer()
+            Spacer(minLength: 24)
             Button {
                 isPickerPresented = true
             } label: {
-                HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                  HStack {
                     Image(systemName: "slider.horizontal.3")
                     Text("Effort")
                     Spacer()
-                    Text(selectedEffort.rawValue)
-                        .foregroundStyle(.secondary)
                     Image(systemName: "chevron.up")
                         .font(.caption.weight(.semibold))
+                  }
+                  Text(selectedEffort.rawValue).foregroundStyle(.secondary)
                 }
                 .padding(20)
                 .background(.white, in: RoundedRectangle(cornerRadius: 24))
@@ -37,7 +40,11 @@ struct UltracodeDemoView: View {
                 .padding(.bottom, 24)
         }
         .padding(.horizontal, 24)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: 720)
+        .frame(maxWidth: .infinity, minHeight: geometry.size.height)
+          }
+          .scrollBounceBehavior(.basedOnSize)
+        }
         .background(UltracodePalette.paper.ignoresSafeArea())
         .foregroundStyle(.black)
         .navigationTitle("Ultracode")
@@ -68,9 +75,10 @@ private struct UltracodeEffortSheet: View {
     @State private var replay = 0
 
     var body: some View {
-        ScrollView {
+        VStack(spacing: 0) {
+            header.padding(.horizontal, 18).padding(.top, 12)
+            ScrollView {
             VStack(spacing: 22) {
-                header
                 VStack(spacing: 0) {
                     ForEach(UltracodeEffort.allCases) { effort in
                         if effort == .ultracode {
@@ -98,6 +106,7 @@ private struct UltracodeEffortSheet: View {
             .padding(.bottom, 30)
         }
         .scrollBounceBehavior(.basedOnSize)
+        }
         .presentationDetents(dynamicTypeSize.isAccessibilitySize ? [.large] : [.height(465)])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(36)
@@ -109,7 +118,8 @@ private struct UltracodeEffortSheet: View {
         Text("Effort")
             .font(.headline)
             .frame(maxWidth: .infinity)
-            .frame(height: 48)
+            .padding(.horizontal, 52)
+            .frame(minHeight: 48)
             .overlay(alignment: .leading) {
                 Button("Close", systemImage: "chevron.left") { dismiss() }
                     .labelStyle(.iconOnly)
@@ -185,15 +195,18 @@ private struct UltracodeAnimatedRow: View {
             Button(action: select) {
                 HStack(spacing: 8) {
                     Text("Ultracode")
+                        .fixedSize(horizontal: false, vertical: true)
                     if isSelected {
                         Image(systemName: "checkmark")
                             .font(.caption.weight(.semibold))
                     }
-                    Spacer(minLength: 70)
+                    Spacer(minLength: 0)
                 }
                 .font(.body)
                 .foregroundStyle(reveal > 0.5 ? .white : .black)
-                .padding(.horizontal, 18)
+                .padding(.leading, 18)
+                .padding(.trailing, 74)
+                .padding(.vertical, 10)
                 .frame(minHeight: 46)
                 .background {
                     UltracodeStage(elapsed: elapsed, isStatic: reduceMotion)

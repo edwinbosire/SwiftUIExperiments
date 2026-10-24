@@ -4,22 +4,32 @@ import Charts
 /// The stock card and chart interactions from main-3.mp4.
 struct XStockGraphDemoView: View {
     @Environment(\.dismiss) private var dismiss
+    @ScaledMetric(relativeTo: .subheadline) private var tabsHeight = 44
 
     var body: some View {
         GeometryReader { geometry in
-            let width = min(geometry.size.width, 600)
-            let scale = width / 393
+            let width = min(geometry.size.width, 1100)
+            let scale = min(1.15, max(0.9, width / 393))
+            let plotHeight = width >= 600
+                ? min(max(220, geometry.size.height - 360 * scale), width * 0.95)
+                : min(280, max(180, geometry.size.height * 0.31))
 
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    searchHeader(scale: scale)
-                    searchTabs(scale: scale)
-                    XStockCard(scale: scale)
-                    referencePost(scale: scale)
+            VStack(spacing: 0) {
+                searchHeader(scale: scale)
+                searchTabs(scale: scale, width: width)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        XStockCard(scale: scale, plotHeight: plotHeight,
+                                   menuHeight: max(132, min(300, geometry.size.height * 0.6)))
+                        referencePost(scale: scale)
+                    }
+                    .padding(.bottom, 20)
                 }
-                .frame(width: width)
-                .frame(maxWidth: .infinity)
+                .scrollIndicators(.hidden)
+                .accessibilityIdentifier("x-stock-scroll")
             }
+            .frame(width: width)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(.black)
         }
         .background(.black)
@@ -32,7 +42,7 @@ struct XStockGraphDemoView: View {
             Button { dismiss() } label: {
                 Image(systemName: "arrow.left")
                     .font(.system(size: 19 * scale, weight: .regular))
-                    .frame(width: 28 * scale, height: 44 * scale)
+                    .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -44,10 +54,10 @@ struct XStockGraphDemoView: View {
                     .font(.system(size: 14 * scale, weight: .semibold))
                     .foregroundStyle(XStockStyle.secondary)
                 Text("$NVDA")
-                    .font(.system(size: 16 * scale))
+                    .font(.body)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 36 * scale)
+            .frame(minHeight: 36 * scale)
             .background(Color(white: 0.12), in: Capsule())
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Search results for NVDA")
@@ -59,26 +69,31 @@ struct XStockGraphDemoView: View {
         }
         .foregroundStyle(XStockStyle.primary)
         .padding(.horizontal, 10 * scale)
-        .frame(height: 48 * scale)
+        .frame(minHeight: 48 * scale)
     }
 
-    private func searchTabs(scale: CGFloat) -> some View {
-        HStack(spacing: 0) {
-            ForEach(["Top", "Latest", "People", "Videos", "Photos"], id: \.self) { tab in
-                Text(tab)
-                    .font(.system(size: 14 * scale, weight: .semibold))
-                    .foregroundStyle(tab == "Top" ? XStockStyle.primary : XStockStyle.secondary)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 39 * scale)
-                    .overlay(alignment: .bottom) {
-                        if tab == "Top" {
-                            Capsule()
-                                .fill(Color(red: 0.11, green: 0.61, blue: 0.94))
-                                .frame(width: 32 * scale, height: 3 * scale)
+    private func searchTabs(scale: CGFloat, width: CGFloat) -> some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 0) {
+                ForEach(["Top", "Latest", "People", "Videos", "Photos"], id: \.self) { tab in
+                    Text(tab)
+                        .font(.subheadline.weight(.semibold))
+                        .fixedSize(horizontal: true, vertical: false)
+                        .foregroundStyle(tab == "Top" ? XStockStyle.primary : XStockStyle.secondary)
+                        .padding(.horizontal, 14)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .overlay(alignment: .bottom) {
+                            if tab == "Top" {
+                                Capsule().fill(Color(red: 0.11, green: 0.61, blue: 0.94))
+                                    .frame(width: 32 * scale, height: 3)
+                            }
                         }
-                    }
+                }
             }
+            .frame(minWidth: max(0, width - 10 * scale))
         }
+        .scrollIndicators(.hidden)
+        .frame(height: tabsHeight)
         .padding(.horizontal, 5 * scale)
         .overlay(alignment: .bottom) { XStockDivider() }
     }
@@ -99,7 +114,7 @@ struct XStockGraphDemoView: View {
                         .foregroundStyle(XStockStyle.primary)
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundStyle(Color(red: 0.11, green: 0.61, blue: 0.94))
-                        .font(.system(size: 13 * scale))
+                        .font(.footnote)
                     Text("▧")
                         .foregroundStyle(XStockStyle.primary)
                     Text("@B0SIRE · 17h")
@@ -109,12 +124,12 @@ struct XStockGraphDemoView: View {
                         .font(.system(size: 20 * scale))
                         .foregroundStyle(XStockStyle.primary)
                 }
-                .font(.system(size: 14 * scale))
+                .font(.subheadline)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
 
                 Text("Not a single fintech CEO slept well last night.")
-                    .font(.system(size: 14 * scale))
+                    .font(.subheadline)
                     .foregroundStyle(XStockStyle.primary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -149,6 +164,9 @@ private struct XStockCard: View {
     @State private var showsStyleMenu = false
     @Namespace private var rangeSelection
     let scale: CGFloat
+    let plotHeight: CGFloat
+    let menuHeight: CGFloat
+    @ScaledMetric(relativeTo: .subheadline) private var controlHeight = 57
 
     private var series: XStockSeries { XStockReference.series(for: range) }
     private var selection: XStockSample? {
@@ -173,11 +191,11 @@ private struct XStockCard: View {
                 selectedFraction: $selectedFraction,
                 scale: scale
             )
-            .frame(height: 204 * scale)
+            .frame(height: plotHeight)
             .accessibilityHidden(showsStyleMenu)
 
             controls
-                .frame(height: 57 * scale)
+                .frame(height: controlHeight)
                 .padding(.horizontal, 10 * scale)
         }
         .overlay(alignment: .bottomTrailing) {
@@ -211,35 +229,35 @@ private struct XStockCard: View {
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 1 * scale) {
                     Text("NVIDIA Corp")
-                        .font(.system(size: 15 * scale, weight: .medium))
+                        .font(.subheadline.weight(.medium))
                         .foregroundStyle(XStockStyle.primary)
                     Text("NVDA · $4.8T MC · USD")
-                        .font(.system(size: 13 * scale))
+                        .font(.footnote)
                         .foregroundStyle(XStockStyle.secondary)
                 }
             }
-            .frame(height: 36 * scale, alignment: .top)
+            .fixedSize(horizontal: false, vertical: true)
 
             Text(XStockReference.priceLabel(selection?.price ?? 198.87))
-                .font(.system(size: 26 * scale, weight: .semibold))
+                .font(.title.weight(.semibold))
                 .tracking(-0.8 * scale)
                 .foregroundStyle(XStockStyle.primary)
                 .contentTransition(.numericText())
-                .frame(height: 34 * scale, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("x-stock-price")
 
             Text(changeLabel)
-                .font(.system(size: 13 * scale))
+                .font(.footnote)
                 .foregroundStyle((selection?.price ?? 198.87) >= comparisonPrice ? XStockStyle.green : XStockStyle.red)
                 .contentTransition(.numericText())
-                .frame(height: 18 * scale, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("x-stock-change")
 
             Label("After hours $198.52 (-0.18%)", systemImage: "clock")
                 .labelStyle(.titleAndIcon)
-                .font(.system(size: 12.5 * scale))
+                .font(.caption)
                 .foregroundStyle(XStockStyle.secondary)
-                .frame(height: 17 * scale, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .opacity(selection == nil && (range == .day || range == .week) ? 1 : 0)
                 .accessibilityHidden(selection != nil || (range != .day && range != .week))
         }
@@ -264,7 +282,8 @@ private struct XStockCard: View {
     private var controls: some View {
         GeometryReader { geometry in
             ZStack {
-                HStack(spacing: 2 * scale) {
+                ScrollView(.horizontal) {
+                  HStack(spacing: 2 * scale) {
                     ForEach(XStockRange.allCases) { item in
                         Button {
                             selectedFraction = nil
@@ -273,17 +292,19 @@ private struct XStockCard: View {
                             }
                         } label: {
                             Text(item.rawValue)
-                                .font(.system(size: 13 * scale))
+                                .font(.subheadline)
+                                .fixedSize(horizontal: true, vertical: false)
+                                .padding(.horizontal, 12)
                                 .foregroundStyle(range == item ? XStockStyle.primary : XStockStyle.secondary)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 30 * scale)
+                                .frame(minWidth: 44, maxWidth: .infinity)
+                                .frame(minHeight: 30 * scale)
                                 .background {
                                     if range == item {
                                         Capsule().fill(XStockStyle.control)
                                             .matchedGeometryEffect(id: "selected-range", in: rangeSelection)
                                     }
                                 }
-                                .frame(height: 44 * scale)
+                                .frame(minHeight: 44)
                                 .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
@@ -298,7 +319,7 @@ private struct XStockCard: View {
                                 .frame(width: 17 * scale, height: 17 * scale)
                             if chartStyle != .line {
                                 Text(chartStyle.rawValue)
-                                    .font(.system(size: 12 * scale))
+                                    .font(.caption)
                                     .lineLimit(1)
                             }
                             Image(systemName: "chevron.up.chevron.down")
@@ -307,9 +328,9 @@ private struct XStockCard: View {
                         .foregroundStyle(XStockStyle.primary)
                         .padding(.horizontal, 10 * scale)
                         .frame(minWidth: (chartStyle == .line ? 52 : 84) * scale)
-                        .frame(height: 30 * scale)
+                        .frame(minHeight: 30 * scale)
                         .background(XStockStyle.control, in: RoundedRectangle(cornerRadius: 8 * scale))
-                        .frame(height: 44 * scale)
+                        .frame(minHeight: 44)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
@@ -317,14 +338,18 @@ private struct XStockCard: View {
                     .accessibilityLabel("Chart style")
                     .accessibilityValue(chartStyle == .line ? "Line" : "\(chartStyle.rawValue) candles")
                     .accessibilityIdentifier("x-stock-chart-style")
+                  }
+                  .frame(minWidth: geometry.size.width, minHeight: geometry.size.height)
                 }
+                .scrollIndicators(.hidden)
+                .accessibilityIdentifier("x-stock-controls")
                 .opacity(selection == nil ? 1 : 0)
                 .allowsHitTesting(selection == nil)
                 .accessibilityHidden(selection != nil)
 
                 if let selection {
                     Text(range.timestamp(at: selection.fraction))
-                        .font(.system(size: 12 * scale))
+                        .font(.caption)
                         .foregroundStyle(XStockStyle.secondary)
                         .fixedSize()
                         .position(
@@ -339,7 +364,8 @@ private struct XStockCard: View {
     }
 
     private var styleMenu: some View {
-        VStack(spacing: 0) {
+        ScrollView {
+          VStack(spacing: 0) {
             ForEach(XStockChartStyle.allCases) { item in
                 Button {
                     selectedFraction = nil
@@ -354,14 +380,14 @@ private struct XStockCard: View {
                             .opacity(chartStyle == item ? 1 : 0)
                             .frame(width: 14 * scale)
                         Text(item.rawValue)
-                            .font(.system(size: 14 * scale))
+                            .font(.subheadline)
                         Spacer()
                         XStockChartIcon(isCandlestick: item != .line)
                             .frame(width: 16 * scale, height: 16 * scale)
                     }
                     .foregroundStyle(XStockStyle.primary)
                     .padding(.horizontal, 10 * scale)
-                    .frame(height: 37 * scale)
+                    .frame(minHeight: 44)
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -371,7 +397,9 @@ private struct XStockCard: View {
                 if item != XStockChartStyle.allCases.last { XStockDivider() }
             }
         }
-        .frame(width: 204 * scale)
+          }
+        .frame(width: 204 * scale, height: min(menuHeight, max(178, controlHeight * 3.15)))
+        .scrollIndicators(.hidden)
         .background(Color(red: 0.105, green: 0.125, blue: 0.115).opacity(0.96), in: RoundedRectangle(cornerRadius: 12 * scale))
         .clipShape(RoundedRectangle(cornerRadius: 12 * scale))
         .shadow(color: .black.opacity(0.25), radius: 12 * scale, y: 4 * scale)
@@ -455,17 +483,12 @@ private struct XStockPlot: View {
                                 .allowsHitTesting(false)
                         }
 
-                        Rectangle()
-                            .fill(.clear)
-                            .contentShape(Rectangle())
-                            .gesture(
-                                DragGesture(minimumDistance: 0)
-                                    .onChanged { value in
-                                        let x = min(max(value.location.x - frame.minX, 0), frame.width)
-                                        selectedFraction = proxy.value(atX: x, as: Double.self)
-                                    }
-                                    .onEnded { _ in selectedFraction = nil }
-                            )
+                        XStockInspectionGesture { location in
+                            let x = min(max(location.x - frame.minX, 0), frame.width)
+                            selectedFraction = proxy.value(atX: x, as: Double.self)
+                        } onEnd: {
+                            selectedFraction = nil
+                        }
                     }
                 }
             }

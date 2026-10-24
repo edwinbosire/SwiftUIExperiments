@@ -4,11 +4,10 @@ struct ExperimentCatalogueView: View {
     let experiments: [CatalogueExperiment]
     @State private var category = CatalogueCategory.all
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @ScaledMetric(relativeTo: .largeTitle) private var headingSize = 41
 
-    private var columns: [GridItem] {
-        if dynamicTypeSize.isAccessibilitySize || horizontalSizeClass != .regular {
+    private func columns(for width: CGFloat) -> [GridItem] {
+        if dynamicTypeSize.isAccessibilitySize || width < 652 {
             return [GridItem(.flexible())]
         }
         return [GridItem(.adaptive(minimum: 320), spacing: 12)]
@@ -26,6 +25,7 @@ struct ExperimentCatalogueView: View {
 
     var body: some View {
         NavigationStack {
+          GeometryReader { geometry in
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     introduction
@@ -39,7 +39,7 @@ struct ExperimentCatalogueView: View {
                         .accessibilityLabel("Featured: \(featured.title). \(featured.detail)")
                         .accessibilityHint("Opens the experiment")
                     }
-                    catalogue
+                    catalogue(width: min(880, geometry.size.width) - 48)
                     colophon
                 }
                 .padding(.horizontal, 24)
@@ -59,6 +59,7 @@ struct ExperimentCatalogueView: View {
             .buttonStyle(.plain)
             .toolbar(.hidden, for: .navigationBar)
             .navigationTitle("UI Experiments")
+          }
         }
         .tint(CataloguePalette.ink)
         .preferredColorScheme(.light)
@@ -94,7 +95,7 @@ struct ExperimentCatalogueView: View {
         }
     }
 
-    private var catalogue: some View {
+    private func catalogue(width: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack(alignment: .firstTextBaseline) {
                 Text("The collection")
@@ -134,7 +135,7 @@ struct ExperimentCatalogueView: View {
             .accessibilityElement(children: .contain)
             .accessibilityLabel("Filter experiments")
 
-            LazyVGrid(columns: columns, spacing: 12) {
+            LazyVGrid(columns: columns(for: width), spacing: 12) {
                 ForEach(collection) { experiment in
                     NavigationLink {
                         experiment.destination()

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        ExperimentCatalogueView(experiments: [
+        let experiments = [
             CatalogueExperiment(id: "rive-onboarding-demo", title: "Rive Onboarding",
                                 detail: "A little journey, brought to life.", category: .motion, artwork: .journey) {
                 RiveOnboardingDemoView()
@@ -47,7 +47,16 @@ struct ContentView: View {
                                 detail: "A fresh perspective on your next read.", category: .layouts, artwork: .books) {
                 CoverFlowDemoView()
             }
-        ])
+        ]
+        #if DEBUG
+        if let experiment = DemoLayoutTesting.selectedExperiment(in: experiments) {
+            NavigationStack { experiment.destination() }
+        } else {
+            ExperimentCatalogueView(experiments: experiments)
+        }
+        #else
+        ExperimentCatalogueView(experiments: experiments)
+        #endif
     }
 }
 
