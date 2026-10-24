@@ -18,13 +18,16 @@ struct GrokBotDemoView: View {
                 showsReactions = true
             } label: {
                 Text("Sign in")
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.body.weight(.medium))
+                    .padding(.vertical, 10)
                     .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, minHeight: 40)
+                    .frame(maxWidth: .infinity, minHeight: 44)
                     .background(Color(white: 0.095), in: Capsule())
                     .shadow(color: .black.opacity(0.13), radius: 18, y: 9)
             }
             .buttonStyle(GrokPressStyle())
+            .frame(maxWidth: 680)
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, 28)
             .padding(.bottom, 5)
             .accessibilityHint("Opens the mascot reactions demo")
@@ -61,48 +64,70 @@ private enum GrokBotPaper {
 }
 
 private struct GrokBotWelcomeStage: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .largeTitle) private var titleSize = 32
     @ScaledMetric(relativeTo: .subheadline) private var subtitleSize = 14.5
 
     var body: some View {
         GeometryReader { geometry in
-            let width = min(geometry.size.width, geometry.size.height * 390 / 844)
-            let size = CGSize(width: width, height: geometry.size.height)
-            let scale = min(width / 390, 1.4)
-
-            ZStack {
-                GrokAnimationTimeline { time in
-                    ZStack {
-                        ForEach(GrokBot.allCases) { bot in
-                            GrokFloatingBot(bot: bot, time: time, scale: scale)
-                                .position(bot.position(at: time, in: size))
-                        }
+            let width = min(geometry.size.width, 1000)
+            let height = max(geometry.size.height, 540)
+            ScrollView {
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(spacing: 24) {
+                        introduction.padding(.horizontal, 28).padding(.top, 60)
+                        bots(in: CGSize(width: width, height: 550))
+                            .frame(height: 550)
                     }
+                    .frame(width: width)
+                    .frame(maxWidth: .infinity)
+                } else {
+                    ZStack {
+                        bots(in: CGSize(width: width, height: height))
+                        introduction
+                            .frame(width: min(500, width * 0.76))
+                            .position(x: width / 2, y: height * 0.497)
+                            .allowsHitTesting(false)
+                    }
+                    .frame(width: width, height: height)
+                    .frame(maxWidth: .infinity)
                 }
-
-                VStack(spacing: 14) {
-                    Text("Grok Bot")
-                        .font(.system(size: titleSize * min(scale, 1.1), weight: .medium))
-                        .foregroundStyle(.black)
-                        .accessibilityAddTraits(.isHeader)
-
-                    Text("Your team of always-on agents\nthat finish the work.")
-                        .font(.system(size: subtitleSize * min(scale, 1.1)))
-                        .foregroundStyle(Color(white: 0.55))
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .frame(width: width * 0.76)
-                .position(x: size.width / 2, y: size.height * 0.497)
-                .allowsHitTesting(false)
             }
-            .frame(width: width, height: geometry.size.height)
-            .clipped()
-            .frame(width: geometry.size.width)
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollIndicators(.hidden)
+            .accessibilityIdentifier("grok-welcome-scroll")
         }
     }
+
+    private var introduction: some View {
+        VStack(spacing: 14) {
+            Text("Grok Bot")
+                .font(.system(size: titleSize, weight: .medium))
+                .foregroundStyle(.black)
+                .accessibilityAddTraits(.isHeader)
+            Text("Your team of always-on agents\nthat finish the work.")
+                .font(.system(size: subtitleSize))
+                .foregroundStyle(Color(white: 0.55))
+                .multilineTextAlignment(.center)
+                .lineSpacing(3)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private func bots(in size: CGSize) -> some View {
+        GrokAnimationTimeline { time in
+            ZStack {
+                ForEach(GrokBot.allCases) { bot in
+                    GrokFloatingBot(bot: bot, time: time, scale: min(size.width / 390, 1.4))
+                        .position(bot.position(at: time, in: size))
+                }
+            }
+        }
+        .frame(width: size.width, height: size.height)
+        .clipped()
+    }
 }
+
 
 private struct GrokFloatingBot: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -144,6 +169,7 @@ private struct GrokFloatingBot: View {
 
 private struct GrokBotReactionsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var reaction: GrokReaction = .automatic
     @State private var replay = 0
     let onReplayWelcome: () -> Void
@@ -162,7 +188,9 @@ private struct GrokBotReactionsView: View {
 
                     GrokReactionPicker(selection: $reaction) { replay += 1 }
 
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 14)], spacing: 14) {
+                    LazyVGrid(columns: dynamicTypeSize.isAccessibilitySize
+                              ? [GridItem(.flexible())]
+                              : [GridItem(.adaptive(minimum: 140), spacing: 14)], spacing: 14) {
                         ForEach(GrokBot.allCases) { bot in
                             GrokBotReactionCard(bot: bot, reaction: reaction)
                                 .id(GrokCardIdentity(bot: bot, replay: replay))
@@ -179,6 +207,8 @@ private struct GrokBotReactionsView: View {
                     .accessibilityIdentifier("grok-replay-welcome")
                 }
                 .padding(20)
+                .frame(maxWidth: 960)
+                .frame(maxWidth: .infinity)
             }
             .background(GrokBotPaper.color)
             .navigationTitle("Meet the bots")

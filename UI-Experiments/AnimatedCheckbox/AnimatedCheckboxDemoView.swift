@@ -23,6 +23,7 @@ private struct Row: View {
 			CheckMark(onTap: { isComplete.toggle() })
 			Text(text)
 				.font(.title3)
+                .fixedSize(horizontal: false, vertical: true)
 				.foregroundStyle(isComplete ? .gray : .white)
 				.strikethrough(isComplete)
 				.padding(.leading, 8.0)

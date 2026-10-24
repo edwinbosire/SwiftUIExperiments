@@ -42,7 +42,7 @@ struct CoverFlowDemoView: View {
 						onClose: closeDetail,
 						onExpand: openFullscreen
 					)
-					.highPriorityGesture(presentationDragGesture(containerHeight: geometry.size.height))
+					.simultaneousGesture(presentationDragGesture(containerHeight: geometry.size.height))
 					.zIndex(10)
 				}
 			}
@@ -179,51 +179,53 @@ private struct CoverFlowLibraryPresentationEffect: ViewModifier, Animatable {
 }
 
 private struct CoverFlowLibraryView: View {
-	let books: [CoverFlowBook]
-	@Binding var focusedBookID: CoverFlowBook.ID?
-	let hiddenBookID: CoverFlowBook.ID?
-	let onDismiss: () -> Void
-	let onSelect: (CoverFlowBook, CGRect) -> Void
+    let books: [CoverFlowBook]
+    @Binding var focusedBookID: CoverFlowBook.ID?
+    let hiddenBookID: CoverFlowBook.ID?
+    let onDismiss: () -> Void
+    let onSelect: (CoverFlowBook, CGRect) -> Void
 
-	var body: some View {
-		GeometryReader { geometry in
-			let cardWidth = min(geometry.size.width * 0.46, 190)
-			let cardHeight = cardWidth * 1.46
-
-			VStack(spacing: 0) {
-				CoverFlowHeader(onDismiss: onDismiss)
-
-				Spacer(minLength: 24)
-
-				ScrollView(.horizontal) {
-					LazyHStack(spacing: 14) {
-						ForEach(books) { book in
-							CoverFlowBookButton(
-								book: book,
-								cardSize: CGSize(width: cardWidth, height: cardHeight),
-								isHidden: hiddenBookID == book.id,
-								onSelect: onSelect
-							)
-							.id(book.id)
-						}
-					}
-					.scrollTargetLayout()
-				}
-				.contentMargins(.horizontal, max(24, (geometry.size.width - cardWidth) / 2), for: .scrollContent)
-				.scrollIndicators(.hidden)
-				.scrollTargetBehavior(.viewAligned)
-				.scrollPosition(id: $focusedBookID, anchor: .center)
-				.frame(height: cardHeight + 56)
-
-				Spacer(minLength: 20)
-
-				Text("Swipe to browse  •  Tap a cover")
-					.font(.footnote.weight(.medium))
-					.foregroundStyle(.secondary)
-					.padding(.bottom, 28)
-			}
-		}
-	}
+    var body: some View {
+        GeometryReader { geometry in
+            let cardWidth = max(1, min(geometry.size.width * 0.46, 280, max(100, geometry.size.height * 0.46)))
+            let cardHeight = cardWidth * 1.46
+            VStack(spacing: 0) {
+                CoverFlowHeader(onDismiss: onDismiss)
+                GeometryReader { viewport in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            Spacer(minLength: 24)
+                            ScrollView(.horizontal) {
+                                LazyHStack(spacing: 14) {
+                                    ForEach(books) { book in
+                                        CoverFlowBookButton(book: book,
+                                            cardSize: CGSize(width: cardWidth, height: cardHeight),
+                                            isHidden: hiddenBookID == book.id, onSelect: onSelect)
+                                            .id(book.id)
+                                    }
+                                }
+                                .scrollTargetLayout()
+                            }
+                            .contentMargins(.horizontal, max(24, (geometry.size.width - cardWidth) / 2), for: .scrollContent)
+                            .scrollIndicators(.hidden)
+                            .scrollTargetBehavior(.viewAligned)
+                            .scrollPosition(id: $focusedBookID, anchor: .center)
+                            .frame(height: cardHeight + 56)
+                            .accessibilityIdentifier("cover-flow-carousel")
+                            Spacer(minLength: 20)
+                            Text("Swipe to browse  •  Tap a cover")
+                                .font(.footnote.weight(.medium))
+                                .foregroundStyle(.secondary)
+                                .padding(.bottom, 28)
+                        }
+                        .frame(minHeight: viewport.size.height)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .accessibilityIdentifier("cover-flow-scroll")
+                }
+            }
+        }
+    }
 }
 
 private struct CoverFlowBookButton: View {
@@ -260,31 +262,43 @@ private struct CoverFlowBookButton: View {
 		}
 		.accessibilityLabel("\(book.title), by \(book.author)")
 		.accessibilityHint("Opens the book details")
+        .accessibilityIdentifier("cover-flow-book-\(book.id)")
 	}
 }
 
 private struct CoverFlowHeader: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 	let onDismiss: () -> Void
 
 	var body: some View {
 		HStack(alignment: .top) {
 			Button(action: onDismiss) {
 				Image(systemName: "chevron.left")
-					.font(.headline.weight(.bold))
+					.font(.system(size: 17, weight: .bold))
 					.frame(width: 42, height: 42)
 					.background(.black.opacity(0.07), in: .circle)
 			}
 			.buttonStyle(.plain)
 			.accessibilityLabel("Back")
+            .accessibilityIdentifier("close-cover-flow-demo")
 
-			VStack(alignment: .leading, spacing: -2) {
-				Text("I’m")
-				Text("Now")
-				Text("Reading")
-			}
-			.font(.system(.largeTitle, design: .serif, weight: .black))
-			.frame(maxWidth: .infinity, alignment: .leading)
+            Group {
+                if dynamicTypeSize.isAccessibilitySize {
+                    Text("Now Reading")
+                        .font(.system(.title2, design: .serif, weight: .black))
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    VStack(alignment: .leading, spacing: -2) {
+                        Text("I’m")
+                        Text("Now")
+                        Text("Reading")
+                    }
+                    .font(.system(.largeTitle, design: .serif, weight: .black))
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
+            if !dynamicTypeSize.isAccessibilitySize {
 			Circle()
 				.fill(
 					AngularGradient(
@@ -297,6 +311,7 @@ private struct CoverFlowHeader: View {
 					Circle().fill(.white.opacity(0.28)).padding(9)
 				}
 				.accessibilityHidden(true)
+            }
 		}
 		.padding(.horizontal, 20)
 		.padding(.top, 10)
@@ -335,8 +350,8 @@ private struct CoverFlowHeroView: View, Animatable {
 	}
 
 	private var destinationFrame: CGRect {
-		let width = min(containerSize.width - 24, 460)
-		let height = min(containerSize.height - 24, 760)
+		let width = max(1, min(containerSize.width - 24, 680))
+		let height = max(1, min(containerSize.height - 24, 900))
 		return CGRect(
 			x: (containerSize.width - width) / 2,
 			y: (containerSize.height - height) / 2,
@@ -411,7 +426,6 @@ private struct CoverFlowHeroView: View, Animatable {
 	var body: some View {
 		let frame = currentFrame
 		let source = resolvedSourceFrame
-		let destination = destinationFrame
 		let frontScaleX = frame.width / source.width
 		let frontScaleY = frame.height / source.height
 		let shadowVisibility = 1 - fullscreenProgress
@@ -425,7 +439,11 @@ private struct CoverFlowHeroView: View, Animatable {
 
 			BookDetailBackView(
 				book: book,
-				contentSize: destination.size,
+				contentSize: frame.size,
+                safeAreaInsets: EdgeInsets(top: safeAreaInsets.top * fullscreenProgress,
+                                          leading: safeAreaInsets.leading * fullscreenProgress,
+                                          bottom: safeAreaInsets.bottom * fullscreenProgress,
+                                          trailing: safeAreaInsets.trailing * fullscreenProgress),
 				fullscreenProgress: fullscreenProgress,
 				canExpand: canExpand,
 				onClose: onClose,
@@ -471,100 +489,91 @@ private struct CoverFlowHeroView: View, Animatable {
 }
 
 private struct BookDetailBackView: View {
-	let book: CoverFlowBook
-	let contentSize: CGSize
-	let fullscreenProgress: CGFloat
-	let canExpand: Bool
-	let onClose: () -> Void
-	let onExpand: () -> Void
+    let book: CoverFlowBook
+    let contentSize: CGSize
+    let safeAreaInsets: EdgeInsets
+    let fullscreenProgress: CGFloat
+    let canExpand: Bool
+    let onClose: () -> Void
+    let onExpand: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-	var body: some View {
-		ZStack {
-			LinearGradient(
-				colors: [book.detailColor, .white, book.detailColor.opacity(0.72)],
-				startPoint: .topLeading,
-				endPoint: .bottomTrailing
-			)
+    var body: some View {
+        ZStack {
+            LinearGradient(colors: [book.detailColor, .white, book.detailColor.opacity(0.72)],
+                           startPoint: .topLeading, endPoint: .bottomTrailing)
+            VStack(spacing: 12) {
+                HStack {
+                    Button(action: onClose) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 17, weight: .semibold))
+                            .frame(width: 44, height: 44)
+                            .background(.black.opacity(0.08), in: Circle())
+                    }
+                    .accessibilityLabel("Close details")
+                    Spacer()
+                    if canExpand {
+                        Button(action: onExpand) {
+                            Image(systemName: "arrow.up.left.and.arrow.down.right")
+                                .font(.system(size: 17))
+                                .frame(width: 44, height: 44)
+                                .background(.black.opacity(0.08), in: Circle())
+                        }
+                        .accessibilityLabel("Open \(book.title) full screen")
+                        .accessibilityIdentifier("cover-flow-expand")
+                    }
+                }
+                .buttonStyle(.plain)
+                ScrollView {
+                    VStack(spacing: 18) {
+                        BookCoverView(book: book, showsShadow: false)
+                            .frame(width: 104, height: 152)
+                            .accessibilityHidden(true)
+                        VStack(spacing: 6) {
+                            Text(book.title)
+                                .font(.system(.title, design: .serif, weight: .bold))
+                            Text(book.author)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.secondary)
+                        }
+                        Text(book.blurb)
+                            .font(.body)
+                            .foregroundStyle(.black.opacity(0.72))
+                            .lineSpacing(4)
+                        metadata
+                            .padding(.vertical, 14)
+                            .background(.white.opacity(0.48), in: RoundedRectangle(cornerRadius: 18))
+                        Label("Drag down to close", systemImage: "arrow.down")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                            .opacity(1 - fullscreenProgress)
+                    }
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: 640)
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, 16)
+                    .contentShape(Rectangle())
+                    .onTapGesture { if canExpand { onExpand() } }
+                }
+                .scrollBounceBehavior(.basedOnSize)
+                .accessibilityIdentifier("book-detail-scroll")
+            }
+            .padding(20)
+            .padding(safeAreaInsets)
+        }
+        .frame(width: contentSize.width, height: contentSize.height)
+    }
 
-			Circle()
-				.fill(book.accentColor.opacity(0.24))
-				.frame(width: 260, height: 260)
-				.blur(radius: 4)
-				.offset(x: 150, y: -280)
-
-			VStack(spacing: 18) {
-				HStack {
-					Button(action: onClose) {
-						Image(systemName: "xmark")
-							.font(.headline.weight(.semibold))
-							.frame(width: 42, height: 42)
-							.background(.black.opacity(0.08), in: .circle)
-					}
-					.buttonStyle(.plain)
-					.accessibilityLabel("Close details")
-
-					Spacer()
-
-					Image(systemName: "ellipsis")
-						.font(.headline.weight(.semibold))
-						.frame(width: 42, height: 42)
-						.background(.black.opacity(0.08), in: .circle)
-						.accessibilityHidden(true)
-				}
-
-				BookCoverView(book: book, showsShadow: false)
-					.frame(width: 104, height: 152)
-					.accessibilityHidden(true)
-
-				VStack(spacing: 6) {
-					Text(book.title)
-						.font(.system(.title, design: .serif, weight: .bold))
-						.multilineTextAlignment(.center)
-						.minimumScaleFactor(0.72)
-
-					Text(book.author)
-						.font(.subheadline.weight(.semibold))
-						.foregroundStyle(.secondary)
-				}
-
-				Text(book.blurb)
-					.font(.body)
-					.foregroundStyle(.black.opacity(0.72))
-					.multilineTextAlignment(.center)
-					.lineSpacing(4)
-
-				Spacer(minLength: 8)
-
-				HStack(spacing: 0) {
-					BookMetadata(value: book.pageCount, label: "Pages")
-					BookMetadata(value: book.published, label: "Published")
-					BookMetadata(value: book.readingTime, label: "Reading")
-				}
-				.padding(.vertical, 14)
-				.background(.white.opacity(0.48), in: .rect(cornerRadius: 18))
-
-				Label("Drag down to close", systemImage: "arrow.down")
-					.font(.footnote.weight(.semibold))
-					.foregroundStyle(.secondary)
-					.opacity(1 - fullscreenProgress)
-			}
-			.padding(20)
-			.frame(width: contentSize.width, height: contentSize.height)
-		}
-		.overlay {
-			if canExpand {
-				Button(action: onExpand) {
-					Rectangle()
-						.fill(.clear)
-						.contentShape(.rect)
-				}
-				.buttonStyle(.plain)
-				.padding(.top, 72)
-				.accessibilityLabel("Open \(book.title) full screen")
-				.accessibilityHint("Expands the details to fill the screen")
-			}
-		}
-	}
+    private var metadata: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 16)) : AnyLayout(HStackLayout(spacing: 0))
+        return layout {
+            BookMetadata(value: book.pageCount, label: "Pages")
+            BookMetadata(value: book.published, label: "Published")
+            BookMetadata(value: book.readingTime, label: "Reading")
+        }
+    }
 }
 
 private struct BookMetadata: View {
@@ -627,6 +636,10 @@ private struct BookCoverView: View {
 				.padding(.leading, 8)
 				.accessibilityHidden(true)
 		}
+        // Printed cover artwork keeps its proportions. The button label and
+        // the separate title and author in the details support Dynamic Type.
+        .environment(\.dynamicTypeSize, .large)
+        .accessibilityHidden(true)
 		.compositingGroup()
 		.clipShape(.rect(cornerRadius: 18, style: .continuous))
 		.overlay {

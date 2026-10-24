@@ -18,32 +18,54 @@ struct IntensityPickerOverlay: ViewModifier {
 	var style: IntensityPickerStyle
 
 	@Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .body) private var panelHeight = 150
 
 	func body(content: Content) -> some View {
-		ZStack(alignment: .bottom) {
-			content
-				.blur(radius: isPresented ? style.metrics.backdropBlur : 0)
-				.overlay {
-					style.colors.backdrop
-						.opacity(isPresented ? 1 : 0)
-						.ignoresSafeArea()
-						.allowsHitTesting(isPresented)
-						.onTapGesture { isPresented = false }
-				}
+        GeometryReader { geometry in
+         let inset = min(max(0, bottomInset), max(0, geometry.size.height - panelHeight))
+         ZStack(alignment: .bottom) {
+            if isPresented {
+                content
+                    .blur(radius: style.metrics.backdropBlur)
+                    .overlay {
+                        style.colors.backdrop
+                            .ignoresSafeArea()
+                            .onTapGesture { isPresented = false }
+                    }
+            } else {
+                content
+                    .transaction { $0.animation = nil }
+            }
 
 			if isPresented {
-				IntensityPicker(levels: levels,
-								selection: $selection,
-								style: style)
-					.padding(.horizontal, horizontalPadding)
-					.padding(.bottom, bottomInset)
-					.transition(
-						.scale(scale: 0.85, anchor: style.metrics.revealAnchor)
-						.combined(with: .opacity)
-					)
+                ScrollView {
+                    IntensityPicker(levels: levels, selection: $selection, style: style)
+                        .accessibilityIdentifier("intensity-control")
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, min(horizontalPadding, geometry.size.width * 0.1))
+                        .frame(maxWidth: 740)
+                        .frame(maxWidth: .infinity)
+                }
+                .scrollBounceBehavior(.basedOnSize)
+                .frame(height: min(panelHeight, max(1, geometry.size.height - inset - 44)))
+                .padding(.bottom, inset)
+                .accessibilityIdentifier("intensity-picker-panel")
+                .accessibilityAction(.escape) { isPresented = false }
+                .transition(.scale(scale: 0.85, anchor: style.metrics.revealAnchor).combined(with: .opacity))
 			}
 		}
-		.animation(style.motion.revealAnimation(reduceMotion: reduceMotion), value: isPresented)
+         .overlay(alignment: .topTrailing) {
+             if isPresented {
+                 Button { isPresented = false } label: {
+                     Image(systemName: "xmark").frame(width: 44, height: 44)
+                 }
+                 .foregroundStyle(.white)
+                 .accessibilityLabel("Close intensity picker")
+                 .accessibilityIdentifier("close-intensity-picker")
+             }
+         }
+        }
+        .animation(style.motion.revealAnimation(reduceMotion: reduceMotion), value: isPresented)
 	}
 }
 

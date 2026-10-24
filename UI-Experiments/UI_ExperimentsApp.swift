@@ -12,6 +12,9 @@ struct UI_ExperimentsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                #if DEBUG
+                .modifier(DemoLayoutTestViewport())
+                #endif
         }
     }
 }

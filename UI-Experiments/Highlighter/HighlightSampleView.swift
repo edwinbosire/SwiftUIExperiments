@@ -1,84 +1,54 @@
-//
-//  HighlightSampleView.swift
-//  UI-Experiments
-//
-//  Created by Edwin Bosire on 21/03/2025.
-//
-
-import Foundation
 import SwiftUI
 
 struct HighlightSampleView: View {
-	let sampleHTML = htmlString
-	let pageId = "life-in-the-uk"
-	private var highlightStorage = HighlightStorage()
-	@State private var highlights: [Highlight] = []
+    let sampleHTML = htmlString
+    let pageId = "life-in-the-uk"
+    private var highlightStorage = HighlightStorage()
+    @State private var highlights: [Highlight] = []
 
-	var body: some View {
-		VStack {
-			HighlightableWebView(
-				htmlContent: sampleHTML,
-				pageIdentifier: pageId,
-				highlights: $highlights
-			)
-
-			if !highlights.isEmpty {
-				Divider()
-
-				VStack(alignment: .leading) {
-					HStack {
-						Text("Saved Highlights")
-							.font(.headline)
-							.padding(.horizontal)
-
-						Spacer()
-
-						Button("Reload") {
-							Task {
-								highlights.removeAll()
-								let hl = highlightStorage.getHighlights(for: pageId)
-								await MainActor.run {
-									highlights = hl
-								}
-							}
-
-						}
-						Button("Remove All") {
-							Task {
-								for item in highlightStorage.getHighlights(for: pageId) {
-									highlightStorage.deleteHighlight(item, for: pageId)
-								}
-								await MainActor.run {
-									highlights.removeAll()
-								}
-							}
-
-						}
-
-					}
-					.padding(.horizontal)
-
-					List {
-						ForEach(highlights) { highlight in
-							Text(highlight.text)
-								.padding(.vertical, 4)
-								.onTapGesture {
-
-								}
-						}
-					}
-					.frame(height: 200)
-				}
-			}
-		}
-		.navigationTitle("Highlightable Content")
-	}
+    var body: some View {
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                HighlightableWebView(htmlContent: sampleHTML, pageIdentifier: pageId, highlights: $highlights)
+                    .frame(minHeight: min(100, geometry.size.height * 0.4))
+                    .layoutPriority(1)
+                if !highlights.isEmpty {
+                    Divider()
+                    ScrollView {
+                     VStack(alignment: .leading, spacing: 8) {
+                        Text("Saved Highlights").font(.headline)
+                        HStack {
+                            Button("Reload") { highlights = highlightStorage.getHighlights(for: pageId) }
+                            Spacer()
+                            Button("Remove All") {
+                                for highlight in highlightStorage.getHighlights(for: pageId) {
+                                    highlightStorage.deleteHighlight(highlight, for: pageId)
+                                }
+                                highlights.removeAll()
+                            }
+                        }
+                        .font(.subheadline)
+                        .frame(minHeight: 44)
+                        ForEach(highlights) { highlight in
+                            Text(highlight.text)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .padding(.vertical, 8)
+                            Divider()
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    }
+                    .frame(maxHeight: min(300, geometry.size.height * 0.45))
+                }
+            }
+            .frame(maxWidth: 1100)
+            .frame(maxWidth: .infinity)
+        }
+        .navigationTitle("Highlightable Content")
+        .navigationBarTitleDisplayMode(.inline)
+    }
 }
 
-struct HighlightSampleView_Previews: PreviewProvider {
-	static var previews: some View {
-		NavigationStack(root: {
-			HighlightSampleView()
-		})
-	}
+#Preview {
+    NavigationStack { HighlightSampleView() }
 }

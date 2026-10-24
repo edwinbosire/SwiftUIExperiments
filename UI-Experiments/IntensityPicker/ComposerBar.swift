@@ -26,7 +26,7 @@ struct ComposerBar: View {
 					.opacity(caretVisible ? 1 : 0)
 
 				Text(placeholder)
-					.font(.system(size: 17))
+					.font(.body)
 					.foregroundStyle(Color(white: 0.42))
 			}
 
@@ -40,10 +40,13 @@ struct ComposerBar: View {
 						.font(.system(size: 20))
 						.foregroundStyle(tint)
 						.contentTransition(.symbolEffect(.replace))
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
 				}
-				.buttonStyle(.plain)
+                .buttonStyle(.plain)
 				.accessibilityLabel("Intensity")
 				.accessibilityValue(level.displayName)
+                .accessibilityIdentifier("show-intensity-picker")
 
 				icon("mic", size: 20)
 

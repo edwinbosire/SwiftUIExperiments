@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct StickyHeaderQuestionView: View {
 	// Track scroll positions
 	@State private var scrollOffset: CGFloat = 0
@@ -16,7 +14,6 @@ struct StickyHeaderQuestionView: View {
 	@State private var originalQuestionPosition: CGFloat = 0
 
 	// For debugging - helps us see when state changes
-	@State private var debugText: String = ""
 	@State private var selectedOptions: Set<String> = []
 
 	// Quiz content
@@ -29,8 +26,6 @@ struct StickyHeaderQuestionView: View {
 		// We want to show the header when the original question moves off-screen (offset is negative)
 		// And hide it when the instruction text approaches the top
 
-		// Debug print for troubleshooting
-		print("Scroll: \(scrollOffset), Question: \(originalQuestionPosition), Instruction: \(instructionPosition)")
 
 		// True when question would be off screen AND instructions aren't too close
 		return scrollOffset < -50 &&
@@ -38,12 +33,10 @@ struct StickyHeaderQuestionView: View {
 	}
 
 	var body: some View {
+        GeometryReader { geometry in
 		ZStack(alignment: .top) {
 			// Background
 			Color(hex: "0D3B39").ignoresSafeArea()
-			Text("\(debugText)")
-				.font(.caption)
-				.foregroundStyle(Color.red)
 			// Scroll content
 			ScrollView {
 				ZStack(alignment: .top) {
@@ -93,7 +86,8 @@ struct StickyHeaderQuestionView: View {
 
 						// Original question (will scroll away)
 						Text(question)
-							.font(.system(size: 32, weight: .bold))
+							.font(.largeTitle.bold())
+                            .fixedSize(horizontal: false, vertical: true)
 							.multilineTextAlignment(.center)
 							.foregroundColor(.white)
 							.padding(.horizontal)
@@ -109,11 +103,12 @@ struct StickyHeaderQuestionView: View {
 
 						// Spacing to simulate content
 						Spacer()
-							.frame(height: 300)
+							.frame(height: min(300, geometry.size.height * 0.25))
 
 						// Instructions text with position tracking
 						Text("Please select TWO answers")
 							.font(.title3)
+                    .fixedSize(horizontal: false, vertical: true)
 							.foregroundColor(.white)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.padding()
@@ -145,26 +140,26 @@ struct StickyHeaderQuestionView: View {
 						.padding(.horizontal)
 						.padding(.bottom, 40)
 					}
+                    .frame(maxWidth: 820)
+                    .frame(maxWidth: .infinity)
 				}
 			}
 			.coordinateSpace(name: "scrollView")
 			.onPreferenceChange(ScrollOffsetKey.self) {
 				scrollOffset = $0
-				debugText = "Scroll: \(Int(scrollOffset)) Question: \(Int(originalQuestionPosition)) Instr: \(Int(instructionPosition))"
 			}
 			.onPreferenceChange(InstructionPositionKey.self) {
 				instructionPosition = $0
-				debugText = "Scroll: \(Int(scrollOffset)) Question: \(Int(originalQuestionPosition)) Instr: \(Int(instructionPosition))"
 			}
 			.onPreferenceChange(OriginalQuestionPositionKey.self) {
 				originalQuestionPosition = $0
-				debugText = "Scroll: \(Int(scrollOffset)) Question: \(Int(originalQuestionPosition)) Instr: \(Int(instructionPosition))"
 			}
 
 			// Sticky question header - always rendered but opacity changes
 			VStack {
 				Text(question)
-					.font(.system(size: 24, weight: .bold))
+					.font(.title2.bold())
+                    .fixedSize(horizontal: false, vertical: true)
 					.multilineTextAlignment(.center)
 					.foregroundColor(.white)
 					.padding(.horizontal)
@@ -172,10 +167,16 @@ struct StickyHeaderQuestionView: View {
 					.frame(maxWidth: .infinity)
 					.background(Color(hex: "0D3B39"))
 			}
+            .allowsHitTesting(false)
+            .accessibilityHidden(!shouldShowStickyHeader)
 			.opacity(shouldShowStickyHeader ? 1 : 0)
 			.animation(.easeInOut(duration: 0.3), value: shouldShowStickyHeader)
 			.zIndex(1)
 		}
+        }
+        .navigationTitle("Quiz")
+        .navigationBarTitleDisplayMode(.inline)
+        .accessibilityIdentifier("quiz-screen")
 	}
 }
 
@@ -208,6 +209,8 @@ struct AnswerOptionButton: View {
 			.cornerRadius(8)
 		}
 		.buttonStyle(PlainButtonStyle())
+        .accessibilityValue(isSelected ? "Selected" : "Not selected")
+        .accessibilityIdentifier("quiz-answer-\(text)")
 	}
 }
 

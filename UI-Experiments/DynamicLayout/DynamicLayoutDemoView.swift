@@ -83,6 +83,8 @@ struct DynamicLayoutDemoView: View {
 
 private struct LayoutRectangle: View {
     let component: LayoutComponent
+    @ScaledMetric(relativeTo: .caption) private var readableHeight = 80
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         RoundedRectangle(cornerRadius: 16)
@@ -95,7 +97,7 @@ private struct LayoutRectangle: View {
                          ? "Min \(Int(component.width.minimumWidth)) pt"
                          : "\(Int(component.width.minimumWidth)) × \(Int(component.height))")
                         .font(.caption.monospacedDigit())
-                    if component.width.isFlexible {
+                    if component.width.isFlexible && !dynamicTypeSize.isAccessibilitySize {
                         Label("Flexible", systemImage: "arrow.left.and.right")
                             .font(.caption2.bold())
                             .padding(.horizontal, 7)
@@ -103,12 +105,13 @@ private struct LayoutRectangle: View {
                             .background(.black.opacity(0.55), in: Capsule())
                     }
                 }
+                .fixedSize(horizontal: false, vertical: true)
                 .foregroundStyle(.white)
                 .padding(12)
             }
             .frame(minWidth: component.width.minimumWidth,
                    maxWidth: component.width.isFlexible ? .infinity : component.width.minimumWidth)
-            .frame(height: component.height)
+            .frame(height: max(component.height, readableHeight))
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("Rectangle \(component.id), \(component.width.isFlexible ? "flexible, minimum width" : "fixed width") \(Int(component.width.minimumWidth)) points")
     }

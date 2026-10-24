@@ -87,7 +87,7 @@ struct ReorderableFlow<Item: Identifiable, Content: View>: View {
                         onDelete(item)
                     } label: {
                         Image(systemName: "xmark")
-                            .font(.caption.bold())
+                            .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(width: 24, height: 24)
                             .background(.black.opacity(0.55), in: Circle())
