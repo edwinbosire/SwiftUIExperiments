@@ -74,6 +74,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		CA7A10000000000000000001 /* Catalogue */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Catalogue; sourceTree = "<group>"; };
 		13BA918D37D4185450884DE1 /* Reader */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Reader; sourceTree = "<group>"; };
 		2466EC8D9E81154F4571E7F5 /* Handbook */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Handbook; sourceTree = "<group>"; };
 		567BA372C21AD106664FACFE /* Calendar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Calendar; sourceTree = "<group>"; };
@@ -141,6 +142,7 @@
 			children = (
 				6425200C2C7B9DE300252FAC /* UI_ExperimentsApp.swift */,
 				6425200E2C7B9DE300252FAC /* ContentView.swift */,
+				CA7A10000000000000000001 /* Catalogue */,
 				D34E2E8C30365F17F5075B58 /* AnimatedCheckbox */,
 				567BA372C21AD106664FACFE /* Calendar */,
 				A2D400FD6056E19EF9D337F4 /* Charts */,
@@ -242,6 +244,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				CA7A10000000000000000001 /* Catalogue */,
 				13BA918D37D4185450884DE1 /* Reader */,
 				2466EC8D9E81154F4571E7F5 /* Handbook */,
 				567BA372C21AD106664FACFE /* Calendar */,

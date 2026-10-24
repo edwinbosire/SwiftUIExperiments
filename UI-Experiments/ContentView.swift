@@ -1,98 +1,50 @@
-//
-//  ContentView.swift
-//  UI-Experiments
-//
-//  Created by Edwin Bosire on 25/08/2024.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-	var body: some View {
-		NavigationStack {
-			List {
-				NavigationLink {
-					XStockGraphDemoView()
-				} label: {
-					Label("X stock graph", systemImage: "chart.xyaxis.line")
-						.font(.title3)
-				}
-				.accessibilityIdentifier("x-stock-demo")
-
-				NavigationLink {
-					GrokBotDemoView()
-				} label: {
-					Label("Grok Bot mascots", systemImage: "eyes")
-						.font(.title3)
-				}
-				.accessibilityIdentifier("grok-bot-demo")
-
-				NavigationLink {
-					DuoOwlDemoView()
-				} label: {
-					Label("Duo owl", systemImage: "bird.fill")
-						.font(.title3)
-				}
-				.accessibilityIdentifier("duo-owl-demo")
-
-				NavigationLink {
-					UltracodeDemoView()
-				} label: {
-					Label("Ultracode", systemImage: "guitars.fill")
-						.font(.title3)
-				}
-				.accessibilityIdentifier("ultracode-demo")
-
-				NavigationLink {
-					DynamicLayoutDemoView()
-				} label: {
-					Label("Dynamic layout", systemImage: "rectangle.3.group.fill")
-						.font(.title3)
-				}
-				.accessibilityIdentifier("dynamic-layout-demo")
-
-				NavigationLink {
-					AnimatedCheckboxDemoView()
-				} label: {
-					Label("Animated checkbox", systemImage: "checkmark.square")
-						.font(.title3)
-				}
-				.accessibilityIdentifier("animated-checkbox-demo")
-
-				NavigationLink {
-					StickyHeaderQuestionView()
-				} label: {
-					Label("Quiz Page", systemImage: "checklist")
-						.font(.title3)
-				}
-
-				NavigationLink {
-					HighlightSampleView()
-				} label: {
-					Label("HTML highlighter", systemImage: "highlighter")
-						.font(.title3)
-				}
-
-				NavigationLink {
-					IntensityPickerDemoView()
-				} label: {
-					Label("Intensity picker", systemImage: "slider.horizontal.3")
-						.font(.title3)
-				}
-
-				NavigationLink {
-					CoverFlowDemoView()
-				} label: {
-					Label("Cover Flow", systemImage: "books.vertical")
-						.font(.title3)
-				}
-
-			}
-			.navigationTitle("UI Experiements")
-			.navigationBarTitleDisplayMode(.large)
-		}
-
-	}
+    var body: some View {
+        ExperimentCatalogueView(experiments: [
+            CatalogueExperiment(id: "x-stock-demo", title: "X stock graph",
+                                detail: "Follow the curve. Feel every change.", category: .controls, artwork: .graph) {
+                XStockGraphDemoView()
+            },
+            CatalogueExperiment(id: "grok-bot-demo", title: "Grok Bot mascots",
+                                detail: "Little characters. Lots of personality.", category: .motion, artwork: .mascots) {
+                GrokBotDemoView()
+            },
+            CatalogueExperiment(id: "duo-owl-demo", title: "Duo owl",
+                                detail: "A familiar face with a playful side.", category: .motion, artwork: .owl) {
+                DuoOwlDemoView()
+            },
+            CatalogueExperiment(id: "ultracode-demo", title: "Ultracode",
+                                detail: "Turn the effort up to eleven.", category: .motion, artwork: .guitar) {
+                UltracodeDemoView()
+            },
+            CatalogueExperiment(id: "dynamic-layout-demo", title: "Dynamic layout",
+                                detail: "A little room to move things around.", category: .layouts, artwork: .layout) {
+                DynamicLayoutDemoView()
+            },
+            CatalogueExperiment(id: "animated-checkbox-demo", title: "Animated checkbox",
+                                detail: "Small wins, with a satisfying finish.", category: .controls, artwork: .checkbox) {
+                AnimatedCheckboxDemoView()
+            },
+            CatalogueExperiment(id: "quiz-demo", title: "Quiz Page",
+                                detail: "Good questions. Thoughtful interactions.", category: .layouts, artwork: .quiz) {
+                StickyHeaderQuestionView()
+            },
+            CatalogueExperiment(id: "highlighter-demo", title: "HTML highlighter",
+                                detail: "Keep the words that stay with you.", category: .controls, artwork: .highlighter) {
+                HighlightSampleView()
+            },
+            CatalogueExperiment(id: "intensity-picker-demo", title: "Intensity picker",
+                                detail: "Find just the right amount.", category: .controls, artwork: .sliders) {
+                IntensityPickerDemoView()
+            },
+            CatalogueExperiment(id: "cover-flow-demo", title: "Cover Flow",
+                                detail: "A fresh perspective on your next read.", category: .layouts, artwork: .books) {
+                CoverFlowDemoView()
+            }
+        ])
+    }
 }
 
 #Preview {
