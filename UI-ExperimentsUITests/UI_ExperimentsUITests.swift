@@ -12,7 +12,7 @@ final class UI_ExperimentsUITests: XCTestCase {
     func testStockRangesScrubReleaseAndCandleStyles() {
         let app = XCUIApplication()
         app.launch()
-        app.buttons["x-stock-demo"].tap()
+        app.openCatalogueExperiment("x-stock-demo")
         let price = app.staticTexts["x-stock-price"]
         XCTAssertTrue(price.waitForExistence(timeout: 5))
         XCTAssertEqual(price.label, "$198.87")
@@ -59,7 +59,7 @@ final class UI_ExperimentsUITests: XCTestCase {
     func testGrokReactionsApplyToAllNineAndReplayWelcome() {
         let app = XCUIApplication()
         app.launch()
-        app.buttons["grok-bot-demo"].tap()
+        app.openCatalogueExperiment("grok-bot-demo")
         let showReactions = app.buttons["grok-reactions"]
         XCTAssertTrue(showReactions.waitForExistence(timeout: 5))
         showReactions.tap()
@@ -94,7 +94,7 @@ final class UI_ExperimentsUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
-        app.buttons["grok-bot-demo"].tap()
+        app.openCatalogueExperiment("grok-bot-demo")
         app.buttons["grok-reactions"].tap()
         let cloud = app.buttons["grok-card-0"]
         XCTAssertTrue(cloud.waitForExistence(timeout: 5))
@@ -108,7 +108,7 @@ final class UI_ExperimentsUITests: XCTestCase {
     func testUltracodeSelectionReplayAndReopening() {
         let app = XCUIApplication()
         app.launch()
-        app.buttons["ultracode-demo"].tap()
+        app.openCatalogueExperiment("ultracode-demo")
 
         let row = app.buttons["ultracode-row"]
         XCTAssertTrue(row.waitForExistence(timeout: 5))
@@ -137,7 +137,7 @@ final class UI_ExperimentsUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
-        app.buttons["ultracode-demo"].tap()
+        app.openCatalogueExperiment("ultracode-demo")
         let row = app.buttons["ultracode-row"]
         XCTAssertTrue(row.waitForExistence(timeout: 5))
         app.scrollViews.firstMatch.swipeUp()
@@ -149,7 +149,7 @@ final class UI_ExperimentsUITests: XCTestCase {
     func testDynamicLayoutAddsDeletesAndRecoversFromEmpty() {
         let app = XCUIApplication()
         app.launch()
-        app.buttons["dynamic-layout-demo"].tap()
+        app.openCatalogueExperiment("dynamic-layout-demo")
 
         let a = app.descendants(matching: .any)["flow-item-A"].firstMatch
         XCTAssertTrue(a.waitForExistence(timeout: 5))
@@ -180,7 +180,7 @@ final class UI_ExperimentsUITests: XCTestCase {
     func testDynamicLayoutReordersBothDirectionsAndResets() {
         let app = XCUIApplication()
         app.launch()
-        app.buttons["dynamic-layout-demo"].tap()
+        app.openCatalogueExperiment("dynamic-layout-demo")
 
         let a = app.descendants(matching: .any)["flow-item-A"].firstMatch
         let b = app.descendants(matching: .any)["flow-item-B"].firstMatch
@@ -249,5 +249,106 @@ final class UI_ExperimentsUITests: XCTestCase {
                 XCUIApplication().launch()
             }
         }
+    }
+}
+
+
+final class CatalogueUITests: XCTestCase {
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
+
+    func testCategoryFiltersPreserveNavigationAndRestoreAllStudies() {
+        let app = XCUIApplication()
+        app.launch()
+        let count = app.staticTexts["catalogue-count"]
+        XCTAssertTrue(count.waitForExistence(timeout: 5))
+        let total = count.label
+        app.selectCatalogueCategory("controls")
+        XCTAssertEqual(count.label, "4 STUDIES")
+        XCTAssertTrue(app.buttons["catalogue-filter-controls"].isSelected)
+        XCTAssertFalse(app.buttons["grok-bot-demo"].exists)
+        app.openCatalogueExperiment("animated-checkbox-demo")
+        XCTAssertTrue(app.navigationBars["Animated checkbox"].waitForExistence(timeout: 3))
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.buttons["catalogue-filter-controls"].isSelected)
+        app.selectCatalogueCategory("motion")
+        XCTAssertFalse(app.buttons["x-stock-demo"].exists)
+        XCTAssertTrue(app.buttons["grok-bot-demo"].exists)
+        app.selectCatalogueCategory("all")
+        XCTAssertEqual(count.label, total)
+        app.selectCatalogueCategory("layouts")
+        XCTAssertEqual(count.label, "3 STUDIES")
+        app.openCatalogueExperiment("cover-flow-demo")
+        XCTAssertTrue(app.staticTexts["Bright Objects"].waitForExistence(timeout: 5))
+    }
+
+    func testCatalogueScrollsToEveryEntry() {
+        let app = XCUIApplication()
+        app.launch()
+        for id in ["x-stock-demo", "grok-bot-demo", "duo-owl-demo", "ultracode-demo",
+                   "dynamic-layout-demo", "animated-checkbox-demo", "quiz-demo", "highlighter-demo",
+                   "intensity-picker-demo", "cover-flow-demo"] {
+            let link = app.buttons[id]
+            app.revealCatalogueElement(link)
+            XCTAssertTrue(link.isHittable, "Missing catalogue entry: \(id)")
+        }
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Catalogue collection"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testCatalogueSupportsAccessibilityTextAndCompactWidth() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        app.selectCatalogueCategory("controls")
+        let link = app.buttons["animated-checkbox-demo"]
+        app.revealCatalogueElement(link)
+        XCTAssertTrue(link.isHittable)
+        XCTAssertGreaterThanOrEqual(link.frame.minX, app.frame.minX)
+        XCTAssertLessThanOrEqual(link.frame.maxX, app.frame.maxX)
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Catalogue accessibility text"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        link.tap()
+        XCTAssertTrue(app.navigationBars["Animated checkbox"].waitForExistence(timeout: 3))
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.buttons["catalogue-filter-controls"].isSelected)
+    }
+}
+
+private extension XCUIApplication {
+    func revealCatalogueElement(_ element: XCUIElement) {
+        let scroll = scrollViews["experiment-catalogue"]
+        for _ in 0..<16 {
+            if element.exists && element.isHittable { return }
+            if element.exists && element.frame.maxY < scroll.frame.minY + 44 {
+                scroll.swipeDown()
+            } else {
+                scroll.swipeUp()
+            }
+        }
+    }
+
+    func openCatalogueExperiment(_ identifier: String) {
+        let link = buttons[identifier]
+        revealCatalogueElement(link)
+        XCTAssertTrue(link.isHittable, "Could not reach \(identifier)")
+        link.tap()
+    }
+
+    func selectCatalogueCategory(_ category: String) {
+        let filter = buttons["catalogue-filter-\(category)"]
+        let filters = scrollViews["catalogue-filters"]
+        revealCatalogueElement(filters)
+        if !filter.isHittable {
+            if category == "all" || category == "motion" { filters.swipeRight() }
+            else { filters.swipeLeft() }
+        }
+        XCTAssertTrue(filter.isHittable)
+        filter.tap()
     }
 }
