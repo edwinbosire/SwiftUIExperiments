@@ -6,6 +6,24 @@ list. Screenshots below were captured on an iPhone 17 Pro simulator running iOS 
 Each experiment keeps its source and supporting files in a feature folder under
 `UI-Experiments/`. The app entry point and main menu remain at the top level.
 
+## Floating Experiment splash
+
+The selected app icon becomes a short launch animation: the orange tile leads,
+then the square, circle, and pill lift along staggered arcs and settle into their
+slots. The angled card stack gently separates and closes. After 2.66 seconds,
+the splash has faded into the interactive catalogue.
+
+The artwork uses independent SwiftUI layers in `Catalogue/FloatingExperimentArtwork.swift`.
+Playback pauses in the background and does not replay on resume. Reduce Motion
+skips the splash. The system launch screen remains static; this scene begins when
+SwiftUI is ready. [View the motion preview](Resources/Previews/floating-experiment-splash.gif).
+
+Open **Floating splash** in the catalogue (or the **Motion** category) to watch it
+again. The demo plays on entry, holds the settled artwork, and offers **Replay
+animation** after each run. Enable **Loop animation** for continuous playback;
+turning it off lets the current run finish. Reduce Motion shows the still artwork
+and disables looping.
+
 ## Rive Onboarding
 
 <p>

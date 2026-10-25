@@ -75,7 +75,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CA7A10000000000000000001 /* Catalogue */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Catalogue; sourceTree = "<group>"; };
 		13BA918D37D4185450884DE1 /* Reader */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Reader; sourceTree = "<group>"; };
 		2466EC8D9E81154F4571E7F5 /* Handbook */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Handbook; sourceTree = "<group>"; };
 		567BA372C21AD106664FACFE /* Calendar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Calendar; sourceTree = "<group>"; };
@@ -84,11 +83,13 @@
 		82B9500740386F455EE45F11 /* KindleReader */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = KindleReader; sourceTree = "<group>"; };
 		9EA068661EF998B6AA7A9929 /* Ultracode */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Ultracode; sourceTree = "<group>"; };
 		A2D400FD6056E19EF9D337F4 /* Charts */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Charts; sourceTree = "<group>"; };
+		CA7A10000000000000000001 /* Catalogue */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Catalogue; sourceTree = "<group>"; };
 		CD933D8FBEC52FC0242B0882 /* DynamicLayout */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DynamicLayout; sourceTree = "<group>"; };
 		CF824890F76BECFA7361AAC5 /* Palette */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Palette; sourceTree = "<group>"; };
 		D0D000000000000000000001 /* DuoOwl */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DuoOwl; sourceTree = "<group>"; };
 		D34E2E8C30365F17F5075B58 /* AnimatedCheckbox */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = AnimatedCheckbox; sourceTree = "<group>"; };
 		D3A000000000000000000001 /* XStockGraph */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = XStockGraph; sourceTree = "<group>"; };
+		E0A6C50F9E4B48949F8A5601 /* TravelCharacter */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TravelCharacter; sourceTree = "<group>"; };
 		F01000000000000000000003 /* RiveOnboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RiveOnboarding; sourceTree = "<group>"; };
 		FA4111B39E32821DEC2C18F1 /* Quiz */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Quiz; sourceTree = "<group>"; };
 		FE166F92CE0E69EEA8DCA190 /* Goals */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Goals; sourceTree = "<group>"; };
@@ -153,6 +154,7 @@
 				71AD37F2C291DF3A424CB153 /* CoverFlow */,
 				CD933D8FBEC52FC0242B0882 /* DynamicLayout */,
 				D0D000000000000000000001 /* DuoOwl */,
+				E0A6C50F9E4B48949F8A5601 /* TravelCharacter */,
 				FE166F92CE0E69EEA8DCA190 /* Goals */,
 				649876F6308AD08600DD1F93 /* GrokBot */,
 				2466EC8D9E81154F4571E7F5 /* Handbook */,
@@ -248,7 +250,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CA7A10000000000000000001 /* Catalogue */,
 				13BA918D37D4185450884DE1 /* Reader */,
 				2466EC8D9E81154F4571E7F5 /* Handbook */,
 				567BA372C21AD106664FACFE /* Calendar */,
@@ -257,11 +258,13 @@
 				82B9500740386F455EE45F11 /* KindleReader */,
 				9EA068661EF998B6AA7A9929 /* Ultracode */,
 				A2D400FD6056E19EF9D337F4 /* Charts */,
+				CA7A10000000000000000001 /* Catalogue */,
 				CD933D8FBEC52FC0242B0882 /* DynamicLayout */,
 				CF824890F76BECFA7361AAC5 /* Palette */,
 				D0D000000000000000000001 /* DuoOwl */,
 				D34E2E8C30365F17F5075B58 /* AnimatedCheckbox */,
 				D3A000000000000000000001 /* XStockGraph */,
+				E0A6C50F9E4B48949F8A5601 /* TravelCharacter */,
 				F01000000000000000000003 /* RiveOnboarding */,
 				FA4111B39E32821DEC2C18F1 /* Quiz */,
 				FE166F92CE0E69EEA8DCA190 /* Goals */,
@@ -563,6 +566,10 @@
 				DEVELOPMENT_TEAM = 33XQUS4CME;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"$(inherited)",
+					MOTION.md,
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "UI-Experiments/Info.plist";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -603,6 +610,10 @@
 				DEVELOPMENT_TEAM = 33XQUS4CME;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"$(inherited)",
+					MOTION.md,
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "UI-Experiments/Info.plist";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

@@ -1,0 +1,13 @@
+Generated with the built-in image_gen tool.
+Design concept: Interface specimens — stacked cards represent the catalogue;
+an orange tile breaks the grid to suggest playful experimentation.
+Concept artwork only; not installed in the app icon asset catalogue.
+
+Use case: logo-brand
+Asset type: iOS app icon design, single square master artwork, 1024x1024.
+Primary request: Design an elegant distinctive icon for UI Experiments, a curated catalogue of playful interactive interface studies. Its existing visual identity is warm editorial paper, deep forest green, sage and burnt orange. Develop the idea of a collection of interface cards with one playful element breaking the grid.
+Subject and composition: Center a compact stack of three softly rounded square interface specimen cards, gently offset diagonally, viewed almost straight on with very restrained tactile depth. Back card forest green, middle card muted sage, front card warm ivory. On the front card arrange a bold minimal 2-by-2 composition of chunky UI building blocks: a forest-green rounded rectangle, a forest-green circle, a forest-green short pill, and a burnt-orange rounded square slightly rotated and nudged upward/right out of alignment. Make the orange square feel like an experiment escaping the ordered grid. Keep the silhouette simple, coherent and legible at tiny home screen sizes. Stack occupies around 65 percent of canvas with generous safe margins.
+Scene/backdrop: Solid warm ivory background extending completely to all four square edges, no outer icon container, no pre-rounded canvas corners.
+Style/medium: Sophisticated tactile graphic icon, crisp precise shapes with subtle paper/ceramic relief, softly rounded edges and extremely restrained soft shadows, mainly flat frontal graphic read. Calm, playful, editorial, designed rather than decorative.
+Color palette: ivory #F7F5ED, forest green #1F4538, sage #E0E8D4, burnt orange #DE6E40. Strong green/ivory contrast, orange is the sole vivid accent.
+Constraints: One icon only, no presentation board, no text, no letters, no numbers, no watermark, no device mockup, no sparkles, no laboratory beaker, no gradients, no glass effects, no tiny wireframe details, no thin outlines. Opaque square image.

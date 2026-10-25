@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CatalogueArtwork: View {
     enum Kind {
-        case journey, graph, mascots, owl, traveler, guitar, layout, checkbox, quiz, highlighter, sliders, books
+        case journey, graph, mascots, owl, traveler, guitar, layout, checkbox, quiz, highlighter, sliders, books, splash
 
         var symbol: String {
             switch self {
@@ -18,12 +18,13 @@ struct CatalogueArtwork: View {
             case .highlighter: "highlighter"
             case .sliders: "slider.horizontal.3"
             case .books: "books.vertical.fill"
+            case .splash: "square.stack.3d.up.fill"
             }
         }
 
         var tint: Color {
             switch self {
-            case .journey, .highlighter, .traveler: CataloguePalette.orange
+            case .journey, .highlighter, .traveler, .splash: CataloguePalette.orange
             case .graph, .layout, .checkbox: CataloguePalette.ink
             case .mascots, .guitar: Color(red: 0.52, green: 0.40, blue: 0.64)
             case .owl: Color(red: 0.40, green: 0.55, blue: 0.30)
@@ -37,7 +38,10 @@ struct CatalogueArtwork: View {
     var isHero = false
 
     var body: some View {
-        if isHero {
+        if kind == .splash {
+            FloatingExperimentArtwork(time: 0)
+                .frame(width: isHero ? 170 : 52, height: isHero ? 170 : 52)
+        } else if isHero {
             GeometryReader { geometry in
                 heroComposition
                     .frame(width: 280, height: 170)

@@ -11,7 +11,7 @@ import SwiftUI
 struct UI_ExperimentsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ExperimentLaunchView()
                 #if DEBUG
                 .modifier(DemoLayoutTestViewport())
                 #endif

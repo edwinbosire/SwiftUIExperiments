@@ -7,6 +7,10 @@ struct ContentView: View {
                                 detail: "A little journey, brought to life.", category: .motion, artwork: .journey) {
                 RiveOnboardingDemoView()
             },
+            CatalogueExperiment(id: "floating-splash-demo", title: "Floating splash",
+                                detail: "A little room to play. Again and again.", category: .motion, artwork: .splash) {
+                FloatingSplashDemoView()
+            },
             CatalogueExperiment(id: "x-stock-demo", title: "X stock graph",
                                 detail: "Follow the curve. Feel every change.", category: .controls, artwork: .graph) {
                 XStockGraphDemoView()

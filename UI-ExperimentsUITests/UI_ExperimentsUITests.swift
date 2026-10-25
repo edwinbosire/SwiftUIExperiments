@@ -9,6 +9,74 @@ import XCTest
 
 final class UI_ExperimentsUITests: XCTestCase {
 
+    func testFloatingSplashLoopStartsFromRestAndStopsAfterCurrentRun() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-demo-test-feature", "floating-splash-demo"]
+        app.launch()
+        let replay = app.buttons["floating-splash-replay"]
+        let loop = app.switches["floating-splash-loop"]
+        XCTAssertTrue(loop.waitForExistence(timeout: 5))
+        XCTAssertEqual(loop.value as? String, "0")
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: replay)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 6), .completed)
+        // SwiftUI exposes the full label row as the switch; tap its trailing control.
+        loop.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        XCTAssertEqual(loop.value as? String, "1")
+        XCTAssertEqual(replay.value as? String, "Playing")
+        // Stay in playback beyond two complete runs without another tap.
+        let stoppedEarly = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: replay)
+        stoppedEarly.isInverted = true
+        XCTAssertEqual(XCTWaiter.wait(for: [stoppedEarly], timeout: 6), .completed)
+        loop.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        XCTAssertEqual(loop.value as? String, "0")
+        let stopped = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true AND value == 'Ready'"), object: replay)
+        XCTAssertEqual(XCTWaiter.wait(for: [stopped], timeout: 6), .completed)
+        replay.tap()
+        XCTAssertEqual(replay.value as? String, "Playing")
+    }
+
+    func testFloatingSplashCatalogueReplayAndBack() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-skip-splash"]
+        app.launch()
+        app.selectCatalogueCategory("motion")
+        app.openCatalogueExperiment("floating-splash-demo")
+        let replay = app.buttons["floating-splash-replay"]
+        XCTAssertTrue(replay.waitForExistence(timeout: 5))
+        for _ in 0..<2 {
+            let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true AND value == 'Ready'"), object: replay)
+            XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 6), .completed)
+            replay.tap()
+            XCTAssertEqual(replay.value as? String, "Playing")
+        }
+        // Back works during playback; opening the experiment again starts a fresh run.
+        app.buttons["close-floating-splash-demo"].tap()
+        app.openCatalogueExperiment("floating-splash-demo")
+        XCTAssertTrue(replay.waitForExistence(timeout: 5))
+        let readyAgain = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: replay)
+        XCTAssertEqual(XCTWaiter.wait(for: [readyAgain], timeout: 6), .completed)
+        app.buttons["close-floating-splash-demo"].tap()
+        XCTAssertTrue(app.buttons["floating-splash-demo"].waitForExistence(timeout: 3))
+    }
+
+    func testSplashRevealsUsableCatalogueAndDoesNotReplayOnResume() {
+        let app = XCUIApplication()
+        app.launch()
+        let catalogue = app.scrollViews["experiment-catalogue"]
+        let splash = app.otherElements["floating-experiment-splash"]
+        let completed = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: splash)
+        XCTAssertEqual(XCTWaiter.wait(for: [completed], timeout: 8), .completed)
+        XCTAssertTrue(catalogue.waitForExistence(timeout: 8))
+        XCTAssertTrue(catalogue.isHittable)
+        XCTAssertFalse(app.otherElements["floating-experiment-splash"].exists)
+        XCUIDevice.shared.press(.home)
+        app.activate()
+        XCTAssertTrue(catalogue.waitForExistence(timeout: 3))
+        XCTAssertFalse(app.otherElements["floating-experiment-splash"].exists)
+        app.openCatalogueExperiment("rive-onboarding-demo")
+        XCTAssertTrue(app.buttons["rive-onboarding-next"].waitForExistence(timeout: 5))
+    }
+
     func testRiveOnboardingSelectionNameBackCompletionReplayAndSkip() {
         let app = XCUIApplication()
         app.launch()
